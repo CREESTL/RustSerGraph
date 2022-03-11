@@ -64,7 +64,18 @@ mod tree {
         }
 
         // Function adds a node to the graph
-        pub fn add_node(&mut self, node: Node<T>) {            
+        pub fn add_node(&mut self, node: Node<T>) {  
+
+            for el in self.arena.iter() {
+                // Check if any previous node connects to the current node
+                if el.as_ref().unwrap().connected.contains(&node.index) {
+                    // Check if current node connects to that previous one
+                    if node.connected.contains(&el.as_ref().unwrap().index) {
+                        panic!("Graph Loops Are Forbidden!");
+                    }
+                }
+            }
+
             self.arena.push(Some(node));
         }
 
@@ -97,9 +108,42 @@ mod tree {
             None
         }
 
+
         // Function makes a node with a given arena index a root of a graph
         pub fn set_root(&mut self, root: Option<usize>) {
             self.root = root;
+        }
+
+        // Function checks if nodes exists in the graph
+        pub fn in_graph(&self, index: usize) -> bool {
+            if let Some(node) = self.get_node(index) {
+                return true;
+            }
+            return false;
+        }
+
+        // Function to create a directed edge of the graph between two nodes
+        pub fn add_edge(&mut self, from: usize, to: usize) {
+            // Check if both nodes are in the graph
+            if self.in_graph(from) && self.in_graph(to) {
+                // Start and end of the edge must be different nodes
+                if to == from {
+                    panic!("Graph Loops are Forbidden");
+                } else {
+                    // Check if edge does not exist yet
+                    if !self.get_node(from).unwrap().connected.contains(&to) {
+                        // Check if a parent node already has edge to this child. It that case creating
+                        // another edge makes a loop
+                        if !self.get_node(to).unwrap().connected.contains(&from) {
+                            self.get_node_mut(from).unwrap().connected.push(to);
+                        } else {
+                            panic!("Graph Loops are Forbidden");
+                        }
+                    } else {
+                        panic!("Node {} Is Already a Child for Node {}", to, from);
+                    }
+                }
+            }
         }
 
         // Function returns a custom iterator over the graph
