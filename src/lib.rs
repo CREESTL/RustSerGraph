@@ -8,45 +8,59 @@ pub use iter::GraphIter;
 
 // Module of a graph node
 mod node {
+
+    use std::fmt::Display;
+
     // Alias ti separate index of a node and index of a node in the arena vector
     type Number = usize;
 
-    // Struct of a graph node
+    // Struct of a graph node]
     pub struct Node<T> {
         // Node has an index, a value and may have other nodes connected to it
         // Index is equal to node's position in arena of a graph.
         pub index: Option<usize>,
         pub value: T,
-        pub connected: Vec<Option<Node<T>>>
+        // Connected nodes are accessed through their arena indexes
+        // Deleted nodes are replaced with None. Length of vector stays the same
+        pub connected: Vec<Option<usize>>
     }
 
-    impl<T> Node<T> {
+
+    impl<T: Display> Node<T> {
         // Constructor for a new node
-        pub fn new(value: T, connected: Vec<Option<Node<T>>>) -> Self{
+        pub fn new(value: T, connected: Vec<Option<usize>>) -> Self {
             // By default index of a node is None
             // Changes after a node is added to the arena
             Node{index: None, value, connected}
         }
-    }
-}
 
+        pub fn print_node(&self){
+            println!("Current node:\n\tindex: {:?}\n\tvalue:{}\n\tChild nodes are: {:?}", self.index.unwrap(), self.value, self.connected);
+        }
+
+    }
+
+
+}
 
 // Module of a graph
 mod tree {
     use super::node::Node;
     use super::iter::GraphIter;
+    use std::fmt::Display;
+
 
     // Struct of a graph
     pub struct Tree<T> {
         // Graph has a root and an arena
         // Arena is a vector holding nodes of a graph. Allows for random access without nested borrowing
         // Access to each node from arena is through it's index.
-        arena: Vec<Option<Node<T>>>,
+        pub arena: Vec<Option<Node<T>>>,
         // Root is one of the nodes in arena. Access through index as well.
-        root: Option<usize>,
+        pub root: Option<usize>,
     }
 
-    impl<T> Tree<T>{
+    impl<T: Display> Tree<T>{
         // Constructor of a graph
         // At first, tree has no root. It must be set with set_root()
         pub fn new() -> Self {
@@ -76,28 +90,36 @@ mod tree {
 
         // Function removes a node with a given arena index
         pub fn remove_node(&mut self, index: usize) {
-            let mut node = self.arena.iter_mut()
-            .filter_map(Option::as_mut)
-            .find(|node| node.index == Some(index));
-            node.take();
+
+            // Deleting from arena
+            if let Some(node) = self.arena.get_mut(index) {
+                node.take();
+            }
+            // Deleting from parent node
+            for node in self.arena.iter_mut() {
+                if let Some(node) = node {
+                    node.connected.retain(|i| i.unwrap() != index);
+                }
+            }
+
         }
 
         // Function gets the node from the graph (borrows it)
         pub fn get_node(&self, index: usize) -> Option<&Node<T>> {
-            let node = self.arena.iter()
-            .filter_map(Option::as_ref)
-            .find(|node| node.index == Some(index));
-
-            node
+            if let Some(node) = self.arena.get(index) {
+                node.as_ref()
+            } else {
+                None
+            }
         }
 
         // Function gets a mutable node from the graph (mutably borrows it)
         pub fn get_node_mut(&mut self, index: usize) -> Option<&mut Node<T>> {
-            let node = self.arena.iter_mut()
-            .filter_map(Option::as_mut)
-            .find(|node| node.index == Some(index));
-
-            node
+            if let Some(node) = self.arena.get_mut(index){
+                node.as_mut()
+            } else {
+                None
+            }
         }
 
 
@@ -105,10 +127,28 @@ mod tree {
         pub fn iter(&mut self) -> GraphIter {
             GraphIter::new(self.root)
         }
+        
+    }
 
 
+    // Separate implementation for Display bound
+    impl<T: Display> Tree<T>{
+        // Function prints the graph
+        pub fn print(&mut self) {
+            // Create an iterator of a tree
+            let mut graph_iter = self.iter();
+            
+            println!("\nThe root of a graph is node {:?}", self.root.unwrap());
+
+            // Iterate over the tree and print it's nodes
+            while let Some(i) = graph_iter.next(&self) {
+                let node = self.get_node(i).expect("Node not found!");
+                node.print_node()    
+            }          
+        }
 
     }
+
 }
 
 
@@ -118,6 +158,8 @@ mod tree {
 mod iter{
 
     use super::tree::Tree;
+    use std::fmt::Display;
+
 
     pub struct GraphIter{
         // Node arena indexes are stored on the stack
@@ -143,7 +185,7 @@ mod iter{
         // Function returns the next item from the iterator
         // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
         // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
-        pub fn next<T>(&mut self, tree: &Tree<T>) -> Option<usize> {
+        pub fn next<T: Display>(&mut self, tree: &Tree<T>) -> Option<usize> {
             // Get the next index from the stack
             while let Some(node_index) = self.stack.pop(){
                 // Get the node with that index from the graph (from arena)
@@ -153,8 +195,8 @@ mod iter{
                     // Push each connected node onto the stack
                     for node in connected.iter(){
                             if let Some(node) = node {
-                                // Use unwrap_or? Can it be that there is no index?
-                                self.stack.push(node.index.unwrap());
+                                // TODO get rid of dereferencing here?
+                                self.stack.push(*node);
                             }
                     }
 

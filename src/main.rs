@@ -10,16 +10,15 @@ fn main() {
 	let b = tree.add_node(Node::new("Text", vec![]));
 	let c = tree.add_node(Node::new("Generic", vec![]));
 	let d = tree.add_node(Node::new("Is", vec![]));
-	let e = tree.add_node(Node::new("Working", vec![a, b, c, d]));
+	let e = tree.add_node(Node::new("Working", vec![Some(a), Some(b), Some(c), Some(d)]));
 
 	// Set the root of a tree
-	tree.set_root(Some(a));
+	tree.set_root(Some(e));
 
-	// Create an iterator of a tree
-	let mut tree_iter = tree.iter();
-	// Iterate over the tree and print it's nodes
-	while let Some(i) = tree_iter.next(&tree) {
-		let node = tree.get_node(i).expect("No such node!");
-		println!("{}", node.value);
-	}
+	tree.print();
+
+	tree.remove_node(2);
+
+	tree.print();
+
 }
