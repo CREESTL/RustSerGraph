@@ -6,14 +6,25 @@ fn main() {
 
 	// Create a simple tree with 5 nodes
 	let mut tree = Tree::new();
-	tree.add_node(Node::new(1,"Simple", vec![]));
-	tree.add_node(Node::new(2,"Text", vec![1]));
-	tree.add_node(Node::new(3,"Generic", vec![1]));
-	tree.add_node(Node::new(4,"Is", vec![3, 2]));
-	tree.add_node(Node::new(666,"Working", vec![4]));
+
+	tree.add_node(Node::new(0,"Leave"));
+	tree.add_node(Node::new(1,"Simple"));
+	tree.add_node(Node::new(2,"Text"));
+	tree.add_node(Node::new(3,"Generic"));
+	tree.add_node(Node::new(4,"Is"));
+	tree.add_node(Node::new(666,"Working"));
 
 	// Set the root of a tree
 	tree.set_root(Some(666));
+
+	// Add edges
+	tree.add_edge(666, 4);
+	tree.add_edge(4, 3);
+	tree.add_edge(4, 2);
+	tree.add_edge(3, 1);
+	tree.add_edge(3, 0);
+	tree.add_edge(2, 1);
+
 
 	// Tests
 	//tree.add_edge(666, 1);

@@ -22,16 +22,15 @@ mod node {
         pub connected: Vec<usize>
     }
 
-
     impl<T: Display> Node<T> {
         // Constructor for a new node
-        pub fn new(index: usize, value: T, connected: Vec<usize>) -> Self {
-            Node{index, value, connected}
+        pub fn new(index: usize, value: T) -> Self {
+            Node{index, value, connected: Vec::new()}
         }
 
         // Function to print information about the node
         pub fn print_node(&self){
-            println!("Current node:\n\tindex: {:?}\n\tvalue:{}\n\tChild nodes are: {:?}", self.index, self.value, self.connected);
+            println!("Current node:\n\tindex: {:?}\n\tvalue: {}\n\tChild nodes are: {:?}", self.index, self.value, self.connected);
         }
 
     }
@@ -179,7 +178,7 @@ mod tree {
 mod iter{
 
     use super::tree::Tree;
-    use std::fmt::Display;
+    use std::{fmt::Display, io::Read};
 
 
     pub struct GraphIter{
@@ -207,15 +206,22 @@ mod iter{
         // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
         // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
         pub fn next<T: Display>(&mut self, tree: &Tree<T>) -> Option<usize> {
+            let mut c = self.stack.clone();
+            c.reverse();
+            println!("In the beginning of next() stack is {:?}", c);
             // Get the next index from the stack
             while let Some(node_index) = self.stack.pop(){
                 // Get the node with that index from the arena
                 if let Some(node) = tree.get_node(node_index) {
                     // Add it's neighbours to the stack
-                    for node in node.connected.iter(){
+                    let mut clone = node.connected.clone();
+                    // Reverse the stack to process the rightmost edge first
+                    clone.reverse();
+                    for node in clone.iter(){
                             self.stack.push(*node);
                     }
 
+                    //println!("In the end of next() stack is {:?}", self.stack);
                     return Some(node_index)
                 }
             }
