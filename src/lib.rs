@@ -2,7 +2,7 @@
 
 // Export structs
 pub use node::Node;
-pub use tree::Tree;
+pub use graph::Graph;
 pub use iter::GraphIter;
 
 
@@ -39,14 +39,14 @@ mod node {
 }
 
 // Module of a graph
-mod tree {
+mod graph {
     use super::node::Node;
     use super::iter::GraphIter;
     use std::fmt::Display;
 
 
     // Struct of a graph
-    pub struct Tree<T> {
+    pub struct Graph<T> {
         // Graph has a root and an arena
         // Arena is a vector holding nodes of a graph. Allows for random access without nested borrowing
         // Access to each node from arena is through it's index.
@@ -55,11 +55,11 @@ mod tree {
         pub root: Option<usize>,
     }
 
-    impl<T: Display> Tree<T>{
+    impl<T: Display> Graph<T>{
         // Constructor of a graph
         // At first, graph has no root. It must be set with set_root()
         pub fn new() -> Self {
-            Tree{arena: Vec::new(), root: None}
+            Graph{arena: Vec::new(), root: None}
         }
 
         // Function adds a node to the graph
@@ -113,7 +113,7 @@ mod tree {
             self.root = root;
         }
 
-        // Function checks if nodes exists in the graph
+        // Function checks if node exists in the graph
         pub fn in_graph(&self, index: usize) -> bool {
             if let Some(node) = self.get_node(index) {
                 return true;
@@ -121,7 +121,7 @@ mod tree {
             return false;
         }
 
-        // Function to create a directed edge of the graph between two nodes
+        // Function creates a directed edge of the graph between two nodes
         pub fn add_edge(&mut self, from: usize, to: usize) {
             // Check if both nodes are in the graph
             if self.in_graph(from) && self.in_graph(to) {
@@ -156,15 +156,15 @@ mod tree {
 
 
     // Separate implementation for Display bound
-    impl<T: Display> Tree<T>{
+    impl<T: Display> Graph<T>{
         // Function prints the graph
         pub fn print(&mut self) {
-            // Create an iterator of a tree
+            // Create an iterator of a graph
             let mut graph_iter = self.iter();
             
             println!("\nThe root of a graph is node {:?}", self.root.unwrap());
 
-            // Iterate over the tree and print it's nodes
+            // Iterate over the graph and print it's nodes
             while let Some(i) = graph_iter.next(&self) {
                 let node = self.get_node(i).expect("Node not found!");
                 node.print_node()    
@@ -179,7 +179,7 @@ mod tree {
 // the vector has been borrowed already
 mod iter{
 
-    use super::tree::Tree;
+    use super::graph::Graph;
     use std::{fmt::Display};
 
 
@@ -207,14 +207,14 @@ mod iter{
         // Function returns the next item from the iterator of breadth-first-search
         // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
         // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
-        pub fn next<T: Display>(&mut self, tree: &Tree<T>) -> Option<usize> {
+        pub fn next<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
             let mut c = self.stack.clone();
             c.reverse();
             println!("In the beginning of next() stack is {:?}", c);
             // Get the next index from the stack
             while let Some(node_index) = self.stack.pop(){
                 // Get the node with that index from the arena
-                if let Some(node) = tree.get_node(node_index) {
+                if let Some(node) = graph.get_node(node_index) {
                     // Add it's neighbours to the stack
                     let mut clone = node.connected.clone();
                     // Reverse the stack to process the rightmost edge first
@@ -223,7 +223,6 @@ mod iter{
                             self.stack.push(*node);
                     }
 
-                    //println!("In the end of next() stack is {:?}", self.stack);
                     return Some(node_index)
                 }
             }
