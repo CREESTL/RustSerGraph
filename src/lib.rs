@@ -148,7 +148,7 @@ mod graph {
         }
 
         // Function returns a custom iterator over the graph
-        pub fn iter(&mut self) -> GraphIter {
+        pub fn iterate(&mut self) -> GraphIter {
             GraphIter::new(self.root)
         }
         
@@ -159,15 +159,15 @@ mod graph {
     impl<T: Display> Graph<T>{
         // Function prints the graph
         pub fn print(&mut self) {
-            // Create an iterator of a graph
-            let mut graph_iter = self.iter();
             
             println!("\nThe root of a graph is node {:?}", self.root.unwrap());
 
+            // Create an iterator of a graph
+            let mut graph_iter = self.iterate();
             // Iterate over the graph and print it's nodes
             while let Some(i) = graph_iter.next(&self) {
                 let node = self.get_node(i).expect("Node not found!");
-                node.print_node()    
+                node.print_node();    
             }          
         }
     }
