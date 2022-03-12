@@ -10,6 +10,7 @@ pub use iter::GraphIter;
 mod node {
 
     use std::fmt::Display;
+    use std::fmt;
 
     // Struct of a graph node]
     pub struct Node<T> {
@@ -22,19 +23,19 @@ mod node {
         pub connected: Vec<usize>
     }
 
-    impl<T: Display> Node<T> {
+    impl<T> Node<T> {
         // Constructor for a new node
         pub fn new(index: usize, value: T) -> Self {
             Node{index, value, connected: Vec::new()}
         }
-
-        // Function to print information about the node
-        pub fn print_node(&self){
-            println!("Current node:\n\tindex: {:?}\n\tvalue: {}\n\tChild nodes are: {:?}", self.index, self.value, self.connected);
-        }
-
     }
 
+    impl<T: Display> fmt::Display for Node<T> {
+        
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "\nNode {}\n\tValue: {}\n\tChild nodes: {:?}", self.index, self.value, self.connected)
+        }
+    }
 
 }
 
@@ -156,14 +157,14 @@ mod graph {
         // Function prints the graph
         pub fn print(&mut self) {
             
-            println!("\nThe root of a graph is node {:?}", self.root.unwrap());
+            println!("\nRoot Node: {}", self.root.unwrap());
 
             // Create an iterator of a graph
             let mut graph_iter = self.iterate();
             // Iterate over the graph and print it's nodes
             while let Some(i) = graph_iter.next(&self) {
                 let node = self.get_node(i).expect("Node not found!");
-                node.print_node();    
+                println!("{}", node);   
             }          
         }
     }
@@ -206,7 +207,6 @@ mod iter{
         pub fn next<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
             let mut c = self.stack.clone();
             c.reverse();
-            println!("In the beginning of next() stack is {:?}", c);
             // Get the next index from the stack
             while let Some(node_index) = self.stack.pop(){
                 // Get the node with that index from the arena
