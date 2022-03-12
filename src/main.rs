@@ -7,7 +7,6 @@ fn main() {
 	// Create a simple tree with 5 nodes
 	let mut tree = Tree::new();
 
-	tree.add_node(Node::new(0,"Leave"));
 	tree.add_node(Node::new(1,"Simple"));
 	tree.add_node(Node::new(2,"Text"));
 	tree.add_node(Node::new(3,"Generic"));
@@ -22,7 +21,6 @@ fn main() {
 	tree.add_edge(4, 3);
 	tree.add_edge(4, 2);
 	tree.add_edge(3, 1);
-	tree.add_edge(3, 0);
 	tree.add_edge(2, 1);
 
 
@@ -30,7 +28,7 @@ fn main() {
 	//tree.add_edge(666, 1);
 	//tree.add_edge(666, 1);
 	//tree.add_edge(1,666);
-	// tree.add_edge(1,1);
+	//tree.add_edge(1,1);
 
 
 	tree.print();

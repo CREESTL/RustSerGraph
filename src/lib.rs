@@ -142,6 +142,8 @@ mod tree {
                         panic!("Node {} Is Already a Child for Node {}", to, from);
                     }
                 }
+            } else {
+                panic!("Both Nodes Must Be First Added To The Graph!");
             }
         }
 
