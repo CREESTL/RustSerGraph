@@ -50,7 +50,7 @@ mod graph {
         // Graph has a root and an arena
         // Arena is a vector holding nodes of a graph. Allows for random access without nested borrowing
         // Access to each node from arena is through it's index.
-        pub arena: Vec<Option<Node<T>>>,
+        pub arena: Vec<Node<T>>,
         // Root is one of the nodes in arena. Access through index as well.
         pub root: Option<usize>,
     }
@@ -67,30 +67,28 @@ mod graph {
 
             for el in self.arena.iter() {
                 // Check if any previous node connects to the current node
-                if el.as_ref().unwrap().connected.contains(&node.index) {
+                if el.connected.contains(&node.index) {
                     // Check if current node connects to that previous one
-                    if node.connected.contains(&el.as_ref().unwrap().index) {
+                    if node.connected.contains(&el.index) {
                         panic!("Graph Loops Are Forbidden!");
                     }
                 }
             }
 
-            self.arena.push(Some(node));
+            self.arena.push(node);
         }
 
         // Function removes a node with a given arena index
         pub fn remove_node(&mut self, index: usize) {
-            self.arena.retain(|x| x.as_ref().unwrap().index != index);
+            self.arena.retain(|x| x.index != index);
         }
 
         // Function gets the node from the graph (borrows it)
         pub fn get_node(&self, index: usize) -> Option<&Node<T>> {
             for node in self.arena.iter() {
-                if let Some(node) = node {
-                    if node.index == index {
-                        return Some(node)
-                    }
-                } 
+                if node.index == index {
+                    return Some(node)
+                }
             }
             None
         }
@@ -98,11 +96,9 @@ mod graph {
         // Function gets a mutable node from the graph (mutably borrows it)
         pub fn get_node_mut(&mut self, index: usize) -> Option<&mut Node<T>> {
             for node in self.arena.iter_mut() {
-                if let Some(node) = node {
-                    if node.index == index {
-                        return Some(node)
-                    }
-                } 
+                if node.index == index {
+                    return Some(node)
+                }
             }
             None
         }
@@ -115,7 +111,7 @@ mod graph {
 
         // Function checks if node exists in the graph
         pub fn in_graph(&self, index: usize) -> bool {
-            if let Some(node) = self.get_node(index) {
+            if let Some(_) = self.get_node(index) {
                 return true;
             }
             return false;
@@ -180,7 +176,7 @@ mod graph {
 mod iter{
 
     use super::graph::Graph;
-    use std::{fmt::Display};
+    use std::fmt::Display;
 
 
     pub struct GraphIter{
@@ -217,7 +213,7 @@ mod iter{
                 if let Some(node) = graph.get_node(node_index) {
                     // Add it's neighbours to the stack
                     let mut clone = node.connected.clone();
-                    // Reverse the stack to process the rightmost edge first
+                    // Reverse the stack to process the rightmost edge first (human-readible)
                     clone.reverse();
                     for node in node.connected.iter(){
                             self.stack.push(*node);
