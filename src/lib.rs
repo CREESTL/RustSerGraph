@@ -44,6 +44,9 @@ mod graph {
     use super::node::Node;
     use super::iter::GraphIter;
     use std::fmt::Display;
+    use std::fs::File;
+    use std::io::{Write, BufReader, BufRead, Error};
+    use std::slice::SliceIndex;
 
 
     // Struct of a graph
@@ -145,10 +148,39 @@ mod graph {
         }
 
         // Function returns a custom iterator over the graph
-        pub fn iterate(&mut self) -> GraphIter {
+        pub fn iterator(&mut self) -> GraphIter {
             GraphIter::new(self.root)
         }
-        
+
+        // Function serializes the graph into Trivial Graph Format
+        pub fn serialize(&mut self, path: String) -> Result<(), Error>{
+            
+            let mut iter = self.iterator();            
+            let mut output = File::create(path)?;
+            while let Some(i) = iter.next(&self) {
+                if let Some(node) = self.get_node(i) {
+                    writeln!(output, "{} {}", node.index, node.value).expect("Could Not Write a Node to File!");
+                }
+            }
+            writeln!(output, "#").expect("Could Not Write a Separator to File!");
+            // Reset the iterator to start iterating agaim
+            iter.reset(self.root);
+            while let Some(i) = iter.next(&self) {
+                if let Some(node) = self.get_node(i) {
+                    for another in node.connected.iter() {
+                        // No labels for edges are written into the file
+                        writeln!(output, "{} {}", node.index, another).expect("Could Not Write an Edge to File!");
+                    }
+                }
+            }
+
+
+
+            Ok(())
+
+        }
+
+
     }
 
 
@@ -160,14 +192,17 @@ mod graph {
             println!("\nRoot Node: {}", self.root.unwrap());
 
             // Create an iterator of a graph
-            let mut graph_iter = self.iterate();
+            let mut graph_iter = self.iterator();
             // Iterate over the graph and print it's nodes
             while let Some(i) = graph_iter.next(&self) {
-                let node = self.get_node(i).expect("Node not found!");
-                println!("{}", node);   
+                if let Some(node) = self.get_node(i){
+                    println!("{}", node);   
+                }
             }          
         }
     }
+
+
 }
 
 
@@ -186,6 +221,7 @@ mod iter{
     }
 
     impl GraphIter{
+
         // Constructor of the iterator 
         pub fn new(root: Option<usize>) -> Self {
             // If there is a root - stack starts with it
@@ -195,9 +231,16 @@ mod iter{
                 }
             // If there is no root - stack is empty
             } else {
-                GraphIter {
-                    stack: vec![]
-                }
+                panic!("Please, Provide a Root Node for the Iterator!");
+            }
+        }
+
+        // Function resets the iterator
+        pub fn reset(&mut self, root: Option<usize>) {
+            if let Some(root) = root {
+                self.stack = vec![root];
+            } else {
+                self.stack = vec![];
             }
         }
 
@@ -227,5 +270,7 @@ mod iter{
         }
 
     }
+
+
 }
 
