@@ -180,7 +180,7 @@ mod tree {
 mod iter{
 
     use super::tree::Tree;
-    use std::{fmt::Display, io::Read};
+    use std::{fmt::Display};
 
 
     pub struct GraphIter{
@@ -204,7 +204,7 @@ mod iter{
             }
         }
 
-        // Function returns the next item from the iterator
+        // Function returns the next item from the iterator of breadth-first-search
         // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
         // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
         pub fn next<T: Display>(&mut self, tree: &Tree<T>) -> Option<usize> {
@@ -219,7 +219,7 @@ mod iter{
                     let mut clone = node.connected.clone();
                     // Reverse the stack to process the rightmost edge first
                     clone.reverse();
-                    for node in clone.iter(){
+                    for node in node.connected.iter(){
                             self.stack.push(*node);
                     }
 
@@ -230,6 +230,7 @@ mod iter{
 
             return None
         }
+
     }
 }
 
