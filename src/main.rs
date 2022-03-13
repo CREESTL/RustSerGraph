@@ -41,6 +41,9 @@ fn main() {
 
 	graph.print();
 
-	graph.serialize("/home/creestl/programming/blockchain/pixel_plex/ser_graph/graph_file".to_string()).expect("Graph Can Not Be Serialized!");
+	let into_path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/write_into".to_string();
+	let from_path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/write_from".to_string();
+	graph.serialize(&into_path).expect("Graph Can Not Be Serialized!");
+	graph.deserialize(&from_path);
 
 }
