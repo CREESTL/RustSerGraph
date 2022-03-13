@@ -46,7 +46,6 @@ mod graph {
     use std::fmt::Display;
     use std::fs::File;
     use std::io::{Write, BufReader, BufRead, Error};
-    use std::slice::SliceIndex;
 
 
     // Struct of a graph
@@ -81,6 +80,8 @@ mod graph {
 
             self.arena.push(node);
         }
+
+
 
         // Function removes a node with a given arena index
         pub fn remove_node(&mut self, index: usize) {
@@ -181,33 +182,33 @@ mod graph {
         }
 
         // Function deserializes the graph from Trivial Graph Format
-        pub fn deserialize(&mut self, path: &String) -> Result<(), Error> {
-            let input = File::open(path).expect("Could Not Open a File to Read From");
-            let buf = BufReader::new(input);
-            // Indicates if reading edges or nodes
-            let mut edges = false;
-            for line in buf.lines().map(|line| line.unwrap()) {
-                let parts: Vec<&str> = line.split(" ").collect();
-                //println!("parts are {:?}", parts);
-                if !edges {
-                    if parts.get(0).unwrap() == &"#" {
-                        edges = true;
-                        continue;
-                    }
-                    let index: usize = parts.get(0).unwrap().parse().unwrap();
-                    let label= parts[1..].join(" ");
-                    let node = Node::new(index, label);
-                    self.add_node(node);
-                    println!("Node Index Is {}", index);
-                } else {
-                    let first = parts.get(0).unwrap();
-                    let second = parts.get(1).unwrap();
-                    println!("Firt Index Is {}, Second Index Is {}", first, second);
-                }
-            }
+        // pub fn deserialize(&mut self, path: &String) -> Result<(), Error> {
+        //     let input = File::open(path).expect("Could Not Open a File to Read From");
+        //     let buf = BufReader::new(input);
+        //     // Indicates if reading edges or nodes
+        //     let mut edges = false;
+        //     for line in buf.lines().map(|line| line.unwrap()) {
+        //         let parts: Vec<&str> = line.split(" ").collect();
+        //         //println!("parts are {:?}", parts);
+        //         if !edges {
+        //             if parts.get(0).unwrap() == &"#" {
+        //                 edges = true;
+        //                 continue;
+        //             }
+        //             let index: usize = parts.get(0).unwrap().parse().unwrap();
+        //             let label= parts[1..].join(" ");
+        //             let node : T= Node::new(index, label);
+        //             self.add_node(node);
+        //             println!("Node Index Is {}", index);
+        //         } else {
+        //             let first = parts.get(0).unwrap();
+        //             let second = parts.get(1).unwrap();
+        //             println!("Firt Index Is {}, Second Index Is {}", first, second);
+        //         }
+        //     }
 
-            Ok(())
-        }   
+        //     Ok(())
+        // }   
 
         fn zhopa(){
             Node::new(1, 2);
@@ -300,3 +301,4 @@ mod iter{
 
 
 }
+
