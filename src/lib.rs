@@ -12,7 +12,7 @@ mod node {
     use std::fmt::Display;
     use std::fmt;
 
-    // Struct of a graph node]
+    // Struct of a graph node
     pub struct Node<T> {
         // Node has an index, a value and may have other nodes connected to it.
         // Index of a node is NOT the same as node's position in the arena
@@ -153,10 +153,10 @@ mod graph {
         }
 
         // Function serializes the graph into Trivial Graph Format
-        pub fn serialize(&mut self, path: String) -> Result<(), Error>{
+        pub fn serialize(&mut self, path: &String) -> Result<(), Error> {
             
             let mut iter = self.iterator();            
-            let mut output = File::create(path)?;
+            let mut output = File::create(path).expect("Could Not Create a File to Write Into");
             while let Some(i) = iter.next(&self) {
                 if let Some(node) = self.get_node(i) {
                     writeln!(output, "{} {}", node.index, node.value).expect("Could Not Write a Node to File!");
@@ -180,12 +180,39 @@ mod graph {
 
         }
 
+        // Function deserializes the graph from Trivial Graph Format
+        pub fn deserialize(&mut self, path: &String) -> Result<(), Error> {
+            let input = File::open(path).expect("Could Not Open a File to Read From");
+            let buf = BufReader::new(input);
+            // Indicates if reading edges or nodes
+            let mut edges = false;
+            for line in buf.lines().map(|line| line.unwrap()) {
+                let parts: Vec<&str> = line.split(" ").collect();
+                //println!("parts are {:?}", parts);
+                if !edges {
+                    if parts.get(0).unwrap() == &"#" {
+                        edges = true;
+                        continue;
+                    }
+                    let index: usize = parts.get(0).unwrap().parse().unwrap();
+                    let label= parts[1..].join(" ");
+                    let node = Node::new(index, label);
+                    self.add_node(node);
+                    println!("Node Index Is {}", index);
+                } else {
+                    let first = parts.get(0).unwrap();
+                    let second = parts.get(1).unwrap();
+                    println!("Firt Index Is {}, Second Index Is {}", first, second);
+                }
+            }
 
-    }
+            Ok(())
+        }   
 
+        fn zhopa(){
+            Node::new(1, 2);
+        }
 
-    // Separate implementation for Display bound
-    impl<T: Display> Graph<T>{
         // Function prints the graph
         pub fn print(&mut self) {
             
@@ -200,8 +227,8 @@ mod graph {
                 }
             }          
         }
-    }
 
+    }
 
 }
 
@@ -273,4 +300,3 @@ mod iter{
 
 
 }
-
