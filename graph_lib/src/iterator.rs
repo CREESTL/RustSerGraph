@@ -8,7 +8,10 @@ use std::fmt::Display;
 
 pub struct GraphIter{
     // Node arena indexes are stored on the stack
-    stack: Vec<usize>
+    stack: Vec<usize>,
+    // Vector holds the indexes of nodes that have already been visited
+    // Prevents 3+ nodes loops
+    visited: Vec<usize>,
 }
 
 impl GraphIter{
@@ -18,7 +21,8 @@ impl GraphIter{
         // If there is a root - stack starts with it
         if let Some(root) = root {
             GraphIter {
-                stack: vec![root]
+                stack: vec![root],
+                visited: vec![],
             }
         // If there is no root - stack is empty
         } else {
@@ -39,17 +43,25 @@ impl GraphIter{
     // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
     // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
     pub fn next<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
-        let mut c = self.stack.clone();
-        c.reverse();
+        // let mut c = self.stack.clone();
+        // c.reverse();
+
         // Get the next index from the stack
         while let Some(node_index) = self.stack.pop(){
+            
+            // Only process nodes that have not been visited yet
+            if self.visited.contains(&node_index) {
+                continue;
+            }
+            self.visited.push(node_index);
+
             // Get the node with that index from the arena
             if let Some(node) = graph.get_node(node_index) {
                 // Add it's neighbours to the stack
                 let mut clone = node.connected.clone();
                 // Reverse the stack to process the rightmost edge first (human-readible)
                 clone.reverse();
-                for node in node.connected.iter(){
+                for node in clone.iter(){
                         self.stack.push(*node);
                 }
 

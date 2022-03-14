@@ -30,6 +30,8 @@ fn main() {
 	graph.add_edge(2, 8);
 	graph.add_edge(8, 111);
 	graph.add_edge(8, 222);
+	// Make a loop from three nodes
+	graph.add_edge(8, 4);
 
 
 	// Tests

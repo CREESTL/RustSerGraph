@@ -169,10 +169,6 @@ impl<T: Display> Graph<T>{
     //     Ok(())
     // }   
 
-    fn zhopa(){
-        Node::new(1, 2);
-    }
-
     // Function prints the graph
     pub fn print(&mut self) {
         
@@ -183,10 +179,9 @@ impl<T: Display> Graph<T>{
         // Iterate over the graph and print it's nodes
         while let Some(i) = graph_iter.next(&self) {
             if let Some(node) = self.get_node(i){
-                println!("{}", node);   
+                println!("{}", node);
             }
         }          
     }
-
 }
 
