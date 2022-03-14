@@ -1,5 +1,5 @@
-mod lib;
-use lib::{Node, Graph};
+use graph_lib::node::Node;
+use graph_lib::graph::Graph;
 
 fn main() {
 	// TODO place deserialization from file here
