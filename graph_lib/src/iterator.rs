@@ -35,13 +35,14 @@ impl GraphIter{
         if let Some(root) = root {
             self.stack = vec![root];
         } else {
-            panic!("Please, Provide a Root Node for the Iterator!");
+            panic!("Please, Provide a Root To Reset the Iterator!");
         }
     }
 
+    // Next two functions implement a Visitor Pattern. They only borrows a graph when it's beeing called
+    // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter.
+    
     // Function returns the next item from the iterator of BREADTH-first-search
-    // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
-    // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
     pub fn next_breadth_search<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
 
         // remove() might panic, so we have to check for the size of the stack
@@ -72,8 +73,6 @@ impl GraphIter{
     }
 
     // Function returns the next item from the iterator of DEPTH-first-search
-    // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
-    // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
     pub fn next_depth_search<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
 
         // Get the next index from the stack

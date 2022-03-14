@@ -27,8 +27,8 @@ impl<T: Display> Graph<T>{
     // Function adds a node to the graph
     pub fn add_node(&mut self, node: Node<T>) {  
 
+        // Check if any previous node connects to the current node
         for el in self.arena.iter() {
-            // Check if any previous node connects to the current node
             if el.connected.contains(&node.index) {
                 // Check if current node connects to that previous one
                 if node.connected.contains(&el.index) {
@@ -129,7 +129,7 @@ impl<T: Display> Graph<T>{
             }
         }
         writeln!(output, "#").expect("Could Not Write a Separator to File!");
-        // Reset the iterator to start iterating agaim
+        // Reset the iterator to start iterating again
         iter.reset(self.root);
         while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
@@ -142,10 +142,7 @@ impl<T: Display> Graph<T>{
             }
         }
 
-
-
         Ok(())
-
     }
 
     // Function deserializes the graph from Trivial Graph Format
