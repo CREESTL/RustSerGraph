@@ -39,14 +39,12 @@ impl GraphIter{
         }
     }
 
-    // Function returns the next item from the iterator of depth-first-search
+    // Function returns the next item from the iterator of BREADTH-first-search
     // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
     // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
-    pub fn next<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
-        // let mut c = self.stack.clone();
-        // c.reverse();
-        println!("Stack is {:?}", self.stack);
+    pub fn next_breadth_search<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
 
+        // remove() might panic, so we have to check for the size of the stack
         while self.stack.len() >= 1 {
             // Get the next index from the stack
             let node_index = self.stack.remove(0);
@@ -65,6 +63,36 @@ impl GraphIter{
                 // clone.reverse();
                 // clone.reverse();
                 for node in node.connected.iter(){
+                        self.stack.push(*node);
+                }
+
+                return Some(node_index)
+            }
+        }
+
+        return None
+    }
+
+    // Function returns the next item from the iterator of DEPTH-first-search
+    // This function implements a Visitor Pattern. It only borrows a graph when it's beeing called
+    // Between the calls the graph can be modified in any way. A graph to borrow is passed as the second parameter
+    pub fn next_depth_search<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
+
+        // Get the next index from the stack
+        while let Some(node_index) = self.stack.pop(){
+            // Only process nodes that have not been visited yet
+            if self.visited.contains(&node_index) {
+                continue;
+            }
+            self.visited.push(node_index);
+
+            // Get the node with that index from the arena
+            if let Some(node) = graph.get_node(node_index) {
+                // Add it's neighbours to the stack
+                let mut clone = node.connected.clone();
+                // Reverse the stack to process the rightmost edge first (human-readible)
+                clone.reverse();
+                for node in clone.iter(){
                         self.stack.push(*node);
                 }
 

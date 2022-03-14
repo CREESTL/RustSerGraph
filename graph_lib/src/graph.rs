@@ -89,6 +89,9 @@ impl<T: Display> Graph<T>{
             if to == from {
                 panic!("Graph Loops are Forbidden");
             } else {
+                // TODO remove if loops are allowed!
+                // they are prevented in iterator
+
                 // Check if edge does not exist yet
                 if !self.get_node(from).unwrap().connected.contains(&to) {
                     // Check if a parent node already has edge to this child. It that case creating
@@ -117,7 +120,7 @@ impl<T: Display> Graph<T>{
         
         let mut iter = self.iterator();            
         let mut output = File::create(path).expect("Could Not Create a File to Write Into");
-        while let Some(i) = iter.next(&self) {
+        while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
                 writeln!(output, "{} {}", node.index, node.value).expect("Could Not Write a Node to File!");
             }
@@ -125,7 +128,7 @@ impl<T: Display> Graph<T>{
         writeln!(output, "#").expect("Could Not Write a Separator to File!");
         // Reset the iterator to start iterating agaim
         iter.reset(self.root);
-        while let Some(i) = iter.next(&self) {
+        while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
                 for another in node.connected.iter() {
                     // No labels for edges are written into the file
@@ -177,7 +180,7 @@ impl<T: Display> Graph<T>{
         // Create an iterator of a graph
         let mut graph_iter = self.iterator();
         // Iterate over the graph and print it's nodes
-        while let Some(i) = graph_iter.next(&self) {
+        while let Some(i) = graph_iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i){
                 println!("{}", node);
             }
