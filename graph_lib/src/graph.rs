@@ -77,7 +77,8 @@ impl<T: Display> Graph<T>{
     pub fn in_graph(&self, index: usize) -> bool {
         if let Some(_) = self.get_node(index) {
             return true;
-        }
+        } 
+        
         return false;
     }
 
@@ -123,6 +124,8 @@ impl<T: Display> Graph<T>{
         while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
                 writeln!(output, "{} {}", node.index, node.value).expect("Could Not Write a Node to File!");
+            } else {
+                panic!("Could Not Find a Node!");
             }
         }
         writeln!(output, "#").expect("Could Not Write a Separator to File!");
@@ -134,6 +137,8 @@ impl<T: Display> Graph<T>{
                     // No labels for edges are written into the file
                     writeln!(output, "{} {}", node.index, another).expect("Could Not Write an Edge to File!");
                 }
+            } else {
+                panic!("Could Not Find a Node!");
             }
         }
 
@@ -183,6 +188,8 @@ impl<T: Display> Graph<T>{
         while let Some(i) = graph_iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i){
                 println!("{}", node);
+            } else {
+                panic!("Could Not Find a Node!");
             }
         }          
     }
