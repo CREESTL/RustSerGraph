@@ -34,12 +34,6 @@ fn main() {
 	graph.add_edge(8, 4);
 
 
-	// Tests
-	//graph.add_edge(666, 1);
-	//graph.add_edge(666, 1);
-	//graph.add_edge(1,666);
-	//graph.add_edge(1,1);
-
 
 	graph.print();
 

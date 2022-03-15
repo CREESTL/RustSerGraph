@@ -27,6 +27,8 @@ impl<T: Display> Graph<T>{
     // Function adds a node to the graph
     pub fn add_node(&mut self, node: Node<T>) {  
 
+        // TODO remove if loops are allowed
+
         // Check if any previous node connects to the current node
         for el in self.arena.iter() {
             if el.connected.contains(&node.index) {
@@ -70,7 +72,14 @@ impl<T: Display> Graph<T>{
 
     // Function makes a node with a given arena index a root of a graph
     pub fn set_root(&mut self, root: Option<usize>) {
-        self.root = root;
+        // Once root has been set to 'Some' it can't be set to 'None'
+        if self.root.is_some() && root.is_none() {
+            panic!("Can't Set the Root to 'None' If It Has Already Been Set To 'Some'");
+        }
+        // Check if a given root exists in graph
+        if root.is_some() && self.in_graph(root.unwrap()) {
+            self.root = root;
+        }
     }
 
     // Function checks if node exists in the graph
@@ -121,6 +130,7 @@ impl<T: Display> Graph<T>{
         
         let mut iter = self.iterator();            
         let mut output = File::create(path).expect("Could Not Create a File to Write Into");
+        // Iterate over all nodes and write each node data into the file
         while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
                 writeln!(output, "{} {}", node.index, node.value).expect("Could Not Write a Node to File!");
@@ -128,9 +138,11 @@ impl<T: Display> Graph<T>{
                 panic!("Could Not Find a Node!");
             }
         }
+        // Separator between strings of nodes and strings of edges
         writeln!(output, "#").expect("Could Not Write a Separator to File!");
         // Reset the iterator to start iterating again
         iter.reset(self.root);
+        // Iterate over all nodes and write each pair of connected nodes
         while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
                 for another in node.connected.iter() {
