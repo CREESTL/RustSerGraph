@@ -105,6 +105,15 @@ mod tests {
         graph.add_edge(666, 777);
     }
 
+    #[test]
+    #[should_panic]
+    pub fn try_add_forbidden_loop() {
+        let node1 = Node::new(666,"Text");
+        let mut graph = Graph::<&str>::new();
+        graph.add_node(node1);
+        graph.add_edge(666, 666);
+    }
+
 
     // Tests for Iterator
 

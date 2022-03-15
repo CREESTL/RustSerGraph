@@ -77,10 +77,9 @@ impl<T: Display> Graph<T>{
 
     // Function checks if node exists in the graph
     pub fn in_graph(&self, index: usize) -> bool {
-        if let Some(_) = self.get_node(index) {
+        if self.get_node(index).is_some() {
             return true;
-        } 
-        
+        }
         return false;
     }
 
@@ -89,23 +88,17 @@ impl<T: Display> Graph<T>{
         // Check if both nodes are in the graph
         if self.in_graph(from) && self.in_graph(to) {
             // Start and end of the edge must be different nodes
+            // That is the only forbidden case of a loop
             if to == from {
-                panic!("Graph Loops are Forbidden");
+                panic!("Can't Form an Edge from the Node to Itself!");
             } else {
-                // TODO remove if loops are allowed!
-                // they are prevented in iterator
 
                 // Check if edge does not exist yet
+                // Multiple edges from one node to another are forbidden
                 if !self.get_node(from).unwrap().connected.contains(&to) {
-                    // Check if a parent node already has edge to this child. It that case creating
-                    // another edge makes a loop
-                    if !self.get_node(to).unwrap().connected.contains(&from) {
-                        self.get_node_mut(from).unwrap().connected.push(to);
-                    } else {
-                        panic!("Graph Loops are Forbidden");
-                    }
+                    self.get_node_mut(from).unwrap().connected.push(to);
                 } else {
-                    panic!("Node {} Is Already a Child for Node {}", to, from);
+                    panic!("Multiple Edges From Node {} to Node {} are Forbidden!", to, from);
                 }
             }
         } else {
@@ -135,6 +128,7 @@ impl<T: Display> Graph<T>{
         writeln!(output, "#").expect("Could Not Write a Separator to File!");
         // Reset the iterator to start iterating again
         iter.reset(self.root);
+        
         // Iterate over all nodes and write each pair of connected nodes
         while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
