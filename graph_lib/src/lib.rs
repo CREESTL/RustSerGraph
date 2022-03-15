@@ -11,15 +11,21 @@ mod tests {
     // Tests for Node
 
     #[test]
-    pub fn correct_node_print() {
-        let node = Node::new(88, "Richard Mille");
-        assert_eq!(format!("{}", node), "\nNode 88\n\tValue: Richard Mille\n\tChild nodes: []");
+    pub fn create_connected_node() {
+        let node = Node::new(888, 1, Some(vec![777, 888, 111]));
+        assert!(!node.connected().is_empty());
     }
 
     #[test]
     pub fn create_unconnected_node() {
-    	let node = Node::new(99, -10000);
-    	assert_eq!(node.connected, Vec::new());
+    	let node = Node::new(99, -10000, None);
+    	assert_eq!(node.connected(), &Vec::new());
+    }
+
+    #[test]
+    pub fn correct_node_print() {
+        let node = Node::new(88, "Richard Mille", None);
+        assert_eq!(format!("{}", node), "\nNode 88\n\tValue: Richard Mille\n\tChild nodes: []");
     }
 
 
@@ -39,8 +45,8 @@ mod tests {
     #[should_panic]
     pub fn try_add_node_twice() {
         let mut graph = Graph::<&str>::new();
-        graph.add_node(Node::new(666,"Text"));
-        graph.add_node(Node::new(666,"Text"));
+        graph.add_node(Node::new(666,"Text", None));
+        graph.add_node(Node::new(666,"Text", None));
     }
 
 
@@ -75,7 +81,7 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn try_set_root_none() {
-        let node = Node::new(666,"Text");
+        let node = Node::new(666,"Text", None);
         let mut graph = Graph::<&str>::new();
         graph.add_node(node);
         // Also try to change the root
@@ -89,8 +95,8 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn try_add_same_edge() {
-        let node1 = Node::new(666,"Text");
-        let node2 = Node::new(777,"Daniel");
+        let node1 = Node::new(666,"Text", None);
+        let node2 = Node::new(777,"Daniel", None);
         let mut graph = Graph::<&str>::new();
         graph.add_node(node1);
         graph.add_node(node2);
@@ -108,7 +114,7 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn try_add_forbidden_loop() {
-        let node1 = Node::new(666,"Text");
+        let node1 = Node::new(666,"Text", None);
         let mut graph = Graph::<&str>::new();
         graph.add_node(node1);
         graph.add_edge(666, 666);
@@ -135,24 +141,15 @@ mod tests {
     pub fn check_bfs() -> Result<(), String>{
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text"));
-        graph.add_node(Node::new(4,"Text"));
-        graph.add_node(Node::new(3,"Text"));
-        graph.add_node(Node::new(2,"Text"));
-        graph.add_node(Node::new(777,"Text"));
-        graph.add_node(Node::new(999,"Text"));
-        graph.add_node(Node::new(8,"Text"));
-        graph.add_node(Node::new(111,"Text"));
-        graph.add_node(Node::new(222,"Text"));
-
-        graph.add_edge(666, 4);
-        graph.add_edge(4, 3);
-        graph.add_edge(4, 2);
-        graph.add_edge(3, 777);
-        graph.add_edge(3, 999);
-        graph.add_edge(2, 8);
-        graph.add_edge(8, 111);
-        graph.add_edge(8, 222);
+    graph.add_node(Node::new(666,"Text", Some(vec![4])));
+    graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
+    graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
+    graph.add_node(Node::new(2,"Text", Some(vec![8])));
+    graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
+    graph.add_node(Node::new(999,"Text", None));
+    graph.add_node(Node::new(777,"Text", None));
+    graph.add_node(Node::new(111,"Text", None));
+    graph.add_node(Node::new(222,"Text", None));
 
         let correct_order = vec![666, 4, 3, 2, 777, 999, 8, 111, 222];
 
@@ -179,24 +176,15 @@ mod tests {
     pub fn check_dfs() -> Result<(), String>{
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text"));
-        graph.add_node(Node::new(4,"Text"));
-        graph.add_node(Node::new(3,"Text"));
-        graph.add_node(Node::new(2,"Text"));
-        graph.add_node(Node::new(777,"Text"));
-        graph.add_node(Node::new(999,"Text"));
-        graph.add_node(Node::new(8,"Text"));
-        graph.add_node(Node::new(111,"Text"));
-        graph.add_node(Node::new(222,"Text"));
-
-        graph.add_edge(666, 4);
-        graph.add_edge(4, 3);
-        graph.add_edge(4, 2);
-        graph.add_edge(3, 777);
-        graph.add_edge(3, 999);
-        graph.add_edge(2, 8);
-        graph.add_edge(8, 111);
-        graph.add_edge(8, 222);
+        graph.add_node(Node::new(666,"Text", Some(vec![4])));
+        graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
+        graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
+        graph.add_node(Node::new(2,"Text", Some(vec![8])));
+        graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
+        graph.add_node(Node::new(999,"Text", None));
+        graph.add_node(Node::new(777,"Text", None));
+        graph.add_node(Node::new(111,"Text", None));
+        graph.add_node(Node::new(222,"Text", None));
 
         let correct_order = vec![666, 4, 3, 777, 999, 2, 8, 111, 222];
 
@@ -221,9 +209,9 @@ mod tests {
     pub fn check_iterating_loops() -> Result<(), String>{
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text"));
-        graph.add_node(Node::new(4,"Text"));
-        graph.add_node(Node::new(3,"Text"));
+        graph.add_node(Node::new(666,"Text", None));
+        graph.add_node(Node::new(4,"Text", None));
+        graph.add_node(Node::new(3,"Text", None));
 
 
         graph.add_edge(666, 4);

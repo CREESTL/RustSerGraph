@@ -59,7 +59,7 @@ impl GraphIter{
             // Get the node with that index from the arena
             if let Some(node) = graph.get_node(node_index) {
                 // Add it's neighbours to the stack
-                for node in node.connected.iter(){
+                for node in node.connected().iter(){
                         self.stack.push(*node);
                 }
 
@@ -86,7 +86,7 @@ impl GraphIter{
             // Get the node with that index from the arena
             if let Some(node) = graph.get_node(node_index) {
                 // Add it's neighbours to the stack
-                let mut clone = node.connected.clone();
+                let mut clone = node.connected().clone();
                 // Reverse the stack to process the rightmost edge first (human-readible)
                 clone.reverse();
                 for node in clone.iter(){

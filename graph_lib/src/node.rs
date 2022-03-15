@@ -12,13 +12,29 @@ pub struct Node<T> {
     pub value: T,
     // Connected nodes are accessed through their arena indexes
     // Nodes deleted from the graph are deleted from this vector as well
-    pub connected: Vec<usize>
+    // Connected nodes should be added via graph.add_node()
+
+    connected: Vec<usize>
 }
 
 impl<T> Node<T> {
     // Constructor for a new node
-    pub fn new(index: usize, value: T) -> Self {
-        Node{index, value, connected: Vec::new()}
+    pub fn new(index: usize, value: T, connected: Option<Vec<usize>>) -> Self {
+        if connected.is_none() {
+            Node{index, value, connected: Vec::new()}
+        } else {
+            Node{index, value, connected: connected.unwrap()}
+        }
+    }
+
+    // Getter for 'connected'
+    pub fn connected(&self) -> &Vec<usize>{
+        &self.connected
+    }
+
+    // Getter for mutable 'connected'
+    pub fn connected_mut(&mut self) -> &mut Vec<usize> {
+        &mut self.connected
     }
 }
 
@@ -28,6 +44,3 @@ impl<T: Display> fmt::Display for Node<T> {
         write!(f, "\nNode {}\n\tValue: {}\n\tChild nodes: {:?}", self.index, self.value, self.connected)
     }
 }
-
-
-

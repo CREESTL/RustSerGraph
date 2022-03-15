@@ -95,8 +95,8 @@ impl<T: Display> Graph<T>{
 
                 // Check if edge does not exist yet
                 // Multiple edges from one node to another are forbidden
-                if !self.get_node(from).unwrap().connected.contains(&to) {
-                    self.get_node_mut(from).unwrap().connected.push(to);
+                if !self.get_node(from).unwrap().connected().contains(&to) {
+                    self.get_node_mut(from).unwrap().connected_mut().push(to);
                 } else {
                     panic!("Multiple Edges From Node {} to Node {} are Forbidden!", to, from);
                 }
@@ -128,11 +128,11 @@ impl<T: Display> Graph<T>{
         writeln!(output, "#").expect("Could Not Write a Separator to File!");
         // Reset the iterator to start iterating again
         iter.reset(self.root);
-        
+
         // Iterate over all nodes and write each pair of connected nodes
         while let Some(i) = iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
-                for another in node.connected.iter() {
+                for another in node.connected().iter() {
                     // No labels for edges are written into the file
                     writeln!(output, "{} {}", node.index, another).expect("Could Not Write an Edge to File!");
                 }

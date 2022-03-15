@@ -7,33 +7,18 @@ fn main() {
 	// Create a simple graph with 5 nodes
 	let mut graph = Graph::new();
 
-	graph.add_node(Node::new(666,"Text"));
-	graph.add_node(Node::new(4,"Text"));
-	graph.add_node(Node::new(3,"Text"));
-	graph.add_node(Node::new(2,"Text"));
-	graph.add_node(Node::new(777,"Text"));
-	graph.add_node(Node::new(999,"Text"));
-	graph.add_node(Node::new(8,"Text"));
-	graph.add_node(Node::new(111,"Text"));
-	graph.add_node(Node::new(222,"Text"));
-
+    graph.add_node(Node::new(666,"Text", Some(vec![4])));
+    graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
+    graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
+    graph.add_node(Node::new(2,"Text", Some(vec![8])));
+    graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
+    graph.add_node(Node::new(999,"Text", None));
+    graph.add_node(Node::new(777,"Text", None));
+    graph.add_node(Node::new(111,"Text", None));
+    graph.add_node(Node::new(222,"Text", None));
 
 	// Set the root of a graph
 	graph.set_root(Some(666));
-
-	// Add edges
-	graph.add_edge(666, 4);
-	graph.add_edge(4, 3);
-	graph.add_edge(4, 2);
-	graph.add_edge(3, 777);
-	graph.add_edge(3, 999);
-	graph.add_edge(2, 8);
-	graph.add_edge(8, 111);
-	graph.add_edge(8, 222);
-	// Make a loop from three nodes
-	graph.add_edge(8, 4);
-
-
 
 	graph.print();
 
