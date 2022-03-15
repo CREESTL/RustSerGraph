@@ -35,18 +35,14 @@ mod tests {
     	}
     }
 
-    // TODO remove if loops are allowed
     #[test]
     #[should_panic]
-    pub fn add_node_creating_loop() {
-        let mut node1 = Node::new(666,"Text");
-        node1.connected.push(777);
-        let mut node2 = Node::new(777, "Also Text");
-        node2.connected.push(666);
+    pub fn try_add_node_twice() {
         let mut graph = Graph::<&str>::new();
-        graph.add_node(node1);
-        graph.add_node(node2);
+        graph.add_node(Node::new(666,"Text"));
+        graph.add_node(Node::new(666,"Text"));
     }
+
 
     #[test]
     pub fn remove_unexisting_node() {
@@ -112,7 +108,7 @@ mod tests {
 
     // Tests for Iterator
 
-    
+
     #[test]
     #[should_panic]
     pub fn try_create_iterator_no_root() {

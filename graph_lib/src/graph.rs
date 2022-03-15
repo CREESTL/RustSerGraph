@@ -27,22 +27,15 @@ impl<T: Display> Graph<T>{
     // Function adds a node to the graph
     pub fn add_node(&mut self, node: Node<T>) {  
 
-        // TODO remove if loops are allowed
-
-        // Check if any previous node connects to the current node
-        for el in self.arena.iter() {
-            if el.connected.contains(&node.index) {
-                // Check if current node connects to that previous one
-                if node.connected.contains(&el.index) {
-                    panic!("Graph Loops Are Forbidden!");
-                }
-            }
+        // Check if such node is not present in the graph
+        if !self.get_node(node.index).is_some() {
+            self.arena.push(node);
+        } else {
+            panic!("Node {} Is Already in The Graph", node.index);
         }
 
-        self.arena.push(node);
+
     }
-
-
 
     // Function removes a node with a given arena index
     pub fn remove_node(&mut self, index: usize) {
