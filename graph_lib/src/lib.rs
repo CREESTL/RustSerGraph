@@ -29,6 +29,13 @@ mod tests {
         assert_eq!(format!("{}", node), "\nNode 88\n\tValue: Richard Mille\n\tChild nodes: []");
     }
 
+    #[test]
+    pub fn set_and_change_node_value() {
+        let mut node = Node::new(88, "Richard Mille", None);
+        node.change_value("Audemars Piguet");
+        assert_eq!(node.value, "Audemars Piguet");
+    }
+
 
     // Tests for Graph
 
@@ -281,7 +288,6 @@ mod tests {
             panic!("Two Graphs Have Different Number of Nodes!");
         }
 
-        fresh_graph.print();
     }
 }
 
