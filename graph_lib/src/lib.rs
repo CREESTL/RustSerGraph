@@ -119,6 +119,17 @@ mod tests {
         graph.add_edge(666, 666);
     }
 
+    #[derive(PartialEq, Debug)]
+    struct Dummy {
+        head: u32
+    }
+
+    #[test]
+    pub fn try_add_random_value() {
+        let node = Node::new(666,Dummy{head: 14}, None);
+        assert_eq!(node.value, Dummy{head: 14});
+    }
+
 
     // Tests for Iterator
 
