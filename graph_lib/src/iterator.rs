@@ -33,6 +33,7 @@ impl GraphIter{
     // Function resets the iterator
     pub fn reset(&mut self, root: Option<usize>) {
         if let Some(root) = root {
+            self.visited.clear();
             self.stack = vec![root];
         } else {
             panic!("Please, Provide a Root To Reset the Iterator!");
@@ -44,7 +45,6 @@ impl GraphIter{
     
     // Function returns the next item from the iterator of BREADTH-first-search
     pub fn next_breadth_search<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
-
         // remove() might panic, so we have to check for the size of the stack
         while self.stack.len() >= 1 {
             // Get the next index from the stack

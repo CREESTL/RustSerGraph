@@ -39,6 +39,9 @@ impl<T: Display> Graph<T>{
 
     // Function removes a node with a given arena index
     pub fn remove_node(&mut self, index: usize) {
+        if !self.in_graph(index) {
+            panic!("Node {} does not exist in the graph!", index);
+        }
         self.arena.retain(|x| x.index != index);
     }
 
@@ -107,74 +110,13 @@ impl<T: Display> Graph<T>{
     }
 
     // Function returns a custom iterator over the graph
-    pub fn iterator(&mut self) -> GraphIter {
+    pub fn iterator(&self) -> GraphIter {
         GraphIter::new(self.root)
     }
 
-    // Function serializes the graph into Trivial Graph Format
-    pub fn serialize(&mut self, path: &String) -> Result<(), Error> {
-        
-        let mut iter = self.iterator();            
-        let mut output = File::create(path).expect("Could Not Create a File to Write Into");
-        // Iterate over all nodes and write each node data into the file
-        while let Some(i) = iter.next_breadth_search(&self) {
-            if let Some(node) = self.get_node(i) {
-                writeln!(output, "{} {}", node.index, node.value).expect("Could Not Write a Node to File!");
-            } else {
-                panic!("Could Not Find a Node!");
-            }
-        }
-        // Separator between strings of nodes and strings of edges
-        writeln!(output, "#").expect("Could Not Write a Separator to File!");
-        // Reset the iterator to start iterating again
-        iter.reset(self.root);
-
-        // Iterate over all nodes and write each pair of connected nodes
-        while let Some(i) = iter.next_breadth_search(&self) {
-            if let Some(node) = self.get_node(i) {
-                for another in node.connected().iter() {
-                    // No labels for edges are written into the file
-                    writeln!(output, "{} {}", node.index, another).expect("Could Not Write an Edge to File!");
-                }
-            } else {
-                panic!("Could Not Find a Node!");
-            }
-        }
-
-        Ok(())
-    }
-
-    // Function deserializes the graph from Trivial Graph Format
-    // pub fn deserialize(&mut self, path: &String) -> Result<(), Error> {
-    //     let input = File::open(path).expect("Could Not Open a File to Read From");
-    //     let buf = BufReader::new(input);
-    //     // Indicates if reading edges or nodes
-    //     let mut edges = false;
-    //     for line in buf.lines().map(|line| line.unwrap()) {
-    //         let parts: Vec<&str> = line.split(" ").collect();
-    //         //println!("parts are {:?}", parts);
-    //         if !edges {
-    //             if parts.get(0).unwrap() == &"#" {
-    //                 edges = true;
-    //                 continue;
-    //             }
-    //             let index: usize = parts.get(0).unwrap().parse().unwrap();
-    //             let label= parts[1..].join(" ");
-    //             let node : T= Node::new(index, label);
-    //             self.add_node(node);
-    //             println!("Node Index Is {}", index);
-    //         } else {
-    //             let first = parts.get(0).unwrap();
-    //             let second = parts.get(1).unwrap();
-    //             println!("Firt Index Is {}, Second Index Is {}", first, second);
-    //         }
-    //     }
-
-    //     Ok(())
-    // }   
-
+   
     // Function prints the graph
-    pub fn print(&mut self) {
+    pub fn print(&self) {
         
         println!("\nRoot Node: {}", self.root.unwrap());
 

@@ -1,6 +1,7 @@
 pub mod node;
 pub mod graph;
 pub mod iterator;
+pub mod handler;
 
 
 #[cfg(test)]
@@ -51,12 +52,10 @@ mod tests {
 
 
     #[test]
+    #[should_panic]
     pub fn remove_unexisting_node() {
         let mut graph = Graph::<&str>::new();
-        let initial_length = graph.arena.len();
         graph.remove_node(333);
-        let final_length =  graph.arena.len();
-        assert_eq!(initial_length, final_length);
     }
 
 
