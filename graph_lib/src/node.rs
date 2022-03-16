@@ -36,6 +36,11 @@ impl<T> Node<T> {
     pub fn connected_mut(&mut self) -> &mut Vec<usize> {
         &mut self.connected
     }
+
+    // Function changes the value of a node
+    pub fn change_value(&mut self, new_value: T) {
+        self.value = new_value;
+    }
 }
 
 impl<T: Display + Debug> fmt::Display for Node<T> {
