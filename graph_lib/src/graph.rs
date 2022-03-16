@@ -1,10 +1,8 @@
-// Module of a graph
-
 use super::node::Node;
 use super::iterator::GraphIter;
 use std::fmt::{Display, Debug};
 
-
+// Module of a graph
 
 // Struct of a graph
 pub struct Graph<T> {
@@ -32,11 +30,18 @@ impl<T> Graph<T> {
         } else {
             panic!("Node {} is Already in The Graph", node.index);
         }
-
-
     }
 
-    // Function removes a node with a given arena index
+
+    // Function checks if node exists in the graph
+    pub fn in_graph(&self, index: usize) -> bool {
+        if self.get_node(index).is_some() {
+            return true;
+        }
+        return false;
+    }
+
+    // Function removes a node with a given index
     pub fn remove_node(&mut self, index: usize) {
         if !self.in_graph(index) {
             panic!("Node {} does not Exist in the Graph!", index);
@@ -65,7 +70,7 @@ impl<T> Graph<T> {
     }
 
 
-    // Function makes a node with a given arena index a root of a graph
+    // Function makes a node with a given index a root of a graph
     pub fn set_root(&mut self, root: Option<usize>) {
         // Once root has been set to 'Some' it can't be set to 'None'
         if self.root.is_some() && root.is_none() {
@@ -79,13 +84,6 @@ impl<T> Graph<T> {
         }
     }
 
-    // Function checks if node exists in the graph
-    pub fn in_graph(&self, index: usize) -> bool {
-        if self.get_node(index).is_some() {
-            return true;
-        }
-        return false;
-    }
 
     // Function creates a directed edge of the graph between two nodes
     pub fn add_edge(&mut self, from: usize, to: usize) {
@@ -96,7 +94,6 @@ impl<T> Graph<T> {
             if to == from {
                 panic!("Can't Form an Edge From the Node to Itself!");
             } else {
-
                 // Check if edge does not exist yet
                 // Multiple edges from one node to another are forbidden
                 if !self.get_node(from).unwrap().connected().contains(&to) {
@@ -118,15 +115,14 @@ impl<T> Graph<T> {
 }
 
 
+// Implementation of traits for propper output
 impl<T: Display + Debug> Graph<T> {    
     // Function prints the graph
     pub fn print(&self) {
-        
         println!("\nRoot Node: {}", self.root.unwrap());
-
         // Create an iterator of a graph
         let mut graph_iter = self.iterator();
-        // Iterate over the graph and print it's nodes
+        // Iterate over the graph and print each node
         while let Some(i) = graph_iter.next_breadth_search(&self) {
             if let Some(node) = self.get_node(i) {
                 println!("{}", node);

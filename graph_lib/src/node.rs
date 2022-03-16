@@ -1,8 +1,7 @@
-// Module of a graph node
-
-
 use std::fmt::{Display, Debug};
 use std::fmt;
+
+// Module of a graph node
 
 // Struct of a graph node
 pub struct Node<T> {
@@ -43,6 +42,8 @@ impl<T> Node<T> {
     }
 }
 
+
+// Implementation of traits for propper output
 impl<T: Display + Debug> fmt::Display for Node<T> {
     
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

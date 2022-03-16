@@ -1,17 +1,17 @@
-// Module of a Graph Handler
-
 use super::graph::Graph;
 use super::node::Node;
 use std::fmt::Display;
 use std::fs::File;
 use std::io::{Write, BufReader, BufRead};
 
-pub struct GraphHandler;
 
+// Module of a Graph Handler
+
+pub struct GraphHandler;
 
 impl GraphHandler {
 
-	// Initializer
+	// Simple constructor
 	pub fn new() -> Self {
 		GraphHandler
 	}
@@ -62,14 +62,20 @@ impl GraphHandler {
         let buf = BufReader::new(input);
         // Indicates if reading edges or nodes
         let mut edges = false;
+        // Read all lines and iterate over them
         for line in buf.lines().map(|line| line.unwrap()) {
+            // Split the line into parts with spaces
             let parts: Vec<&str> = line.split(" ").collect();
+            // Reading nodes
             if !edges {
+                // Until the '#'
                 if parts.get(0).unwrap() == &"#" {
                     edges = true;
                     continue;
                 }
+                // First part is an index
                 let index: usize = parts.get(0).unwrap().parse().unwrap();
+                // Second part is all the rest
                 let label= parts[1..].join(" ");
 
                 // WARNING!
@@ -84,6 +90,7 @@ impl GraphHandler {
                 if label == String::from("Root") {
                 	graph.set_root(Some(index));
                 }
+            // Reading edges
             } else {
                 let from = parts.get(0).unwrap().parse().unwrap();
                 let to = parts.get(1).unwrap().parse().unwrap();

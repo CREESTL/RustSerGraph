@@ -3,6 +3,8 @@ use graph_lib::graph::Graph;
 use graph_lib::handler::GraphHandler;
 
 
+// Simple Demo
+
 fn main() {
 
 	// Create a simple graph with 5 nodes
@@ -21,13 +23,14 @@ fn main() {
 	// Set the root of a graph
 	graph.set_root(Some(666));
 
-	graph.print();
-
+	// Paths for serializing/deserializing
+	// Two different files on purpose. The second contains lots of labels
 	let into_path = "./resources/write_into".to_string();
 	let from_path = "./resources/read_from".to_string();
 
-
+	// Create a handler that will serialize/deserialize the graph
 	let handler = GraphHandler::new();
+	// Write the graph into file
 	handler.serialize(&mut graph, &into_path).expect("Graph Can Not be Serialized!");
 
 	// WARNING!
@@ -37,7 +40,9 @@ fn main() {
 	// deserialized nodes!
 	// Only types implementing 'Default' are available!
 	let mut fresh_graph: Graph<String> = Graph::new();
+	// Read graph nodes from the other file
 	handler.deserialize(&mut fresh_graph, &from_path).unwrap();
+	// Print the graph
 	fresh_graph.print();
 
 	
