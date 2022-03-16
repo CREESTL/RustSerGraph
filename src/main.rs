@@ -1,6 +1,6 @@
 use graph_lib::node::Node;
 use graph_lib::graph::Graph;
-use graph_lib::handler::GraphHandler as handler;
+use graph_lib::handler::GraphHandler;
 
 fn main() {
 	// TODO place deserialization from file here
@@ -26,7 +26,11 @@ fn main() {
 	let into_path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/write_into".to_string();
 	let from_path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/write_from".to_string();
 
-	handler::serialize(&mut graph, &into_path).expect("Graph Can Not Be Serialized!");
-	//graph.deserialize(&from_path);
+	let handler = GraphHandler::new();
+	handler.serialize(&mut graph, &into_path).expect("Graph Can Not Be Serialized!");
+	match handler.deserialize(&from_path) {
+		Err(String) => println!("Could not parse the file!"),
+		_ => ()
+	}
 
 }

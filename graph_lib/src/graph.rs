@@ -3,8 +3,7 @@
 use super::node::Node;
 use super::iterator::GraphIter;
 use std::fmt::Display;
-use std::fs::File;
-use std::io::{Write, BufReader, BufRead, Error};
+
 
 
 // Struct of a graph
@@ -75,6 +74,8 @@ impl<T: Display> Graph<T>{
         // Check if a given root exists in graph
         if root.is_some() && self.in_graph(root.unwrap()) {
             self.root = root;
+        } else {
+            panic!("Node {} is not in the Graph. Can't Set it to Root", root.unwrap());
         }
     }
 
