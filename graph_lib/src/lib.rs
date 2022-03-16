@@ -267,7 +267,7 @@ mod tests {
 
         graph.set_root(Some(666));
 
-        let path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/graph_lib/test_resources/ serialized_graph_file".to_string();
+        let path = "./test_resources/serialized_graph_file".to_string();
 
         let handler = GraphHandler::new();
         handler.serialize(&mut graph, &path).expect("Graph Can Not be Serialized!");

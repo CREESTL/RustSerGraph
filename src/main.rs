@@ -2,8 +2,8 @@ use graph_lib::node::Node;
 use graph_lib::graph::Graph;
 use graph_lib::handler::GraphHandler;
 
+
 fn main() {
-	// TODO place deserialization from file here
 
 	// Create a simple graph with 5 nodes
 	let mut graph = Graph::new();
@@ -23,8 +23,9 @@ fn main() {
 
 	graph.print();
 
-	let into_path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/write_into".to_string();
-	let from_path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/write_from".to_string();
+	let into_path = "./write_into".to_string();
+	let from_path = "./write_from".to_string();
+
 
 	let handler = GraphHandler::new();
 	handler.serialize(&mut graph, &into_path).expect("Graph Can Not Be Serialized!");
