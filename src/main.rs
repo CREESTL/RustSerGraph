@@ -23,12 +23,12 @@ fn main() {
 
 	graph.print();
 
-	let into_path = "./write_into".to_string();
-	let from_path = "./write_from".to_string();
+	let into_path = "./resources/write_into".to_string();
+	let from_path = "./resources/read_from".to_string();
 
 
 	let handler = GraphHandler::new();
-	handler.serialize(&mut graph, &into_path).expect("Graph Can Not Be Serialized!");
+	handler.serialize(&mut graph, &into_path).expect("Graph Can Not be Serialized!");
 
 	// WARNING!
 
