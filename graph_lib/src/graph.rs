@@ -2,7 +2,7 @@
 
 use super::node::Node;
 use super::iterator::GraphIter;
-use std::fmt::Display;
+use std::fmt::{Display, Debug};
 
 
 
@@ -16,7 +16,7 @@ pub struct Graph<T> {
     pub root: Option<usize>,
 }
 
-impl<T: Display> Graph<T>{
+impl<T> Graph<T>{
     // Constructor of a graph
     // At first, graph has no root. It must be set with set_root()
     pub fn new() -> Self {
@@ -115,7 +115,10 @@ impl<T: Display> Graph<T>{
         GraphIter::new(self.root)
     }
 
-   
+}
+
+
+impl<T: Display + Debug> Graph<T> {    
     // Function prints the graph
     pub fn print(&self) {
         

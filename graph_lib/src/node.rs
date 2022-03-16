@@ -1,7 +1,7 @@
 // Module of a graph node
 
 
-use std::fmt::Display;
+use std::fmt::{Display, Debug};
 use std::fmt;
 
 // Struct of a graph node
@@ -13,12 +13,12 @@ pub struct Node<T> {
     // Connected nodes are accessed through their arena indexes
     // Nodes deleted from the graph are deleted from this vector as well
     // Connected nodes should be added via graph.add_node()
-
     connected: Vec<usize>
 }
 
 impl<T> Node<T> {
     // Constructor for a new node
+    // If connected nodes are mentioned here - they are added to the node
     pub fn new(index: usize, value: T, connected: Option<Vec<usize>>) -> Self {
         if connected.is_none() {
             Node{index, value, connected: Vec::new()}
@@ -38,7 +38,7 @@ impl<T> Node<T> {
     }
 }
 
-impl<T: Display> fmt::Display for Node<T> {
+impl<T: Display + Debug> fmt::Display for Node<T> {
     
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "\nNode {}\n\tValue: {}\n\tChild nodes: {:?}", self.index, self.value, self.connected)
