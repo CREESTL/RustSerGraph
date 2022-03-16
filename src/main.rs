@@ -28,9 +28,17 @@ fn main() {
 
 	let handler = GraphHandler::new();
 	handler.serialize(&mut graph, &into_path).expect("Graph Can Not Be Serialized!");
-	match handler.deserialize(&from_path) {
-		Err(String) => println!("Could not parse the file!"),
-		_ => ()
-	}
+
+	// WARNING!
+
+	// In order for the deserialization to work correctly it is a must
+	// to give a type annotation for the graph that will include the 
+	// deserialized nodes!
+	// Only types implementing 'Default' are available!
+	let mut fresh_graph: Graph<String> = Graph::new();
+	handler.deserialize(&mut fresh_graph, &from_path).unwrap();
+	fresh_graph.print();
+
+	
 
 }

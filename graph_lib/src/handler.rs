@@ -8,6 +8,7 @@ use std::io::{Write, BufReader, BufRead, Error};
 
 pub struct GraphHandler;
 
+
 impl GraphHandler {
 
 	// Initializer
@@ -55,14 +56,12 @@ impl GraphHandler {
     }
 
     // Function deserializes the graph from Trivial Graph Format
-    pub fn deserialize(&self, path: &String) -> Result<(), Error> {
+    pub fn deserialize<T: Default>(&self, graph: &mut Graph<T>, path: &String) -> Result<(), Error> {
 
         let input = File::open(path).expect("Could Not Open a File to Read From");
         let buf = BufReader::new(input);
         // Indicates if reading edges or nodes
         let mut edges = false;
-        // Create a new graph
-        let mut graph = Graph::new();
         for line in buf.lines().map(|line| line.unwrap()) {
             let parts: Vec<&str> = line.split(" ").collect();
             //println!("parts are {:?}", parts);
@@ -73,7 +72,14 @@ impl GraphHandler {
                 }
                 let index: usize = parts.get(0).unwrap().parse().unwrap();
                 let label= parts[1..].join(" ");
-                let node = Node::new(index, "EMPTY", None);
+
+                // WARNING!
+
+                // Node values are NOT listed in the TGF file. That is why type of values of nodes
+                // is infered from the type of the graph what will include these nodes.
+                // Each node gets a default value of it;s type.
+                // Only types implementing 'Default' are allowed.
+                let node = Node::new(index, Default::default(), None);
                 graph.add_node(node);
                 // One of the nodes must be the root
                 if label == String::from("Root") {
@@ -86,17 +92,8 @@ impl GraphHandler {
             }
         }
 
-        println!("\n\n\nGRAPH DESER!");
-        graph.print();
-
         Ok(())
     }   
 
-    // WORKS!
-    // pub fn deserialize(&self, i: i32) {
-    // 	let mut graph = Graph::new();
-    // 	let node = Node::new(1, 2, None);
-    // 	self.add_to_graph(&mut graph, node);
-    // }
 }
 
