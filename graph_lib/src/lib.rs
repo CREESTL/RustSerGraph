@@ -7,7 +7,7 @@ pub mod handler;
 #[cfg(test)]
 mod tests {
 
-    use super::{node::Node, graph::Graph, iterator::GraphIter};
+    use super::{node::Node, graph::Graph, iterator::GraphIter, handler::GraphHandler};
 
     // Tests for Node
 
@@ -243,6 +243,45 @@ mod tests {
 
     }
 
+    // Tests for Handler
+    #[test]
+    pub fn serialize_deserialize_same_graph() {
+        let mut graph = Graph::new();
 
+        graph.add_node(Node::new(666,"Text", Some(vec![4])));
+        graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
+        graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
+        graph.add_node(Node::new(2,"Text", Some(vec![8])));
+        graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
+        graph.add_node(Node::new(999,"Text", None));
+        graph.add_node(Node::new(777,"Text", None));
+        graph.add_node(Node::new(111,"Text", None));
+        graph.add_node(Node::new(222,"Text", None));
+
+        graph.set_root(Some(666));
+
+        let path = "/home/creestl/programming/blockchain/pixel_plex/ser_graph/graph_lib/test_resources/ serialized_graph_file".to_string();
+
+        let handler = GraphHandler::new();
+        handler.serialize(&mut graph, &path).expect("Graph Can Not be Serialized!");
+
+        let mut fresh_graph: Graph<String> = Graph::new();
+        handler.deserialize(&mut fresh_graph, &path);
+
+        let mut iter1 = GraphIter::new(graph.root);
+        let mut iter2 = GraphIter::new(fresh_graph.root);
+
+        if graph.arena.len() == fresh_graph.arena.len() {
+            for i in 0..graph.arena.len() {
+                let node1 = iter1.next_depth_search(&graph).unwrap();
+                let node2 = iter2.next_depth_search(&fresh_graph).unwrap();
+                assert!(node1 == node2);
+            }
+        } else {    
+            panic!("Two Graphs Have Different Number of Nodes!");
+        }
+
+        fresh_graph.print();
+    }
 }
 
