@@ -43,7 +43,7 @@ mod tests {
     pub fn create_graph_no_root() -> Result<(), String> {
     	let graph = Graph::<&str>::new();
     	if let Some(_) = graph.get_node(0) {
-    		Err(String::from("In New Grapg There Must Be No Root!"))
+    		Err(String::from("In New Graph There Must be no Root!"))
     	} else {
     		Ok(())
     	}
@@ -69,8 +69,8 @@ mod tests {
     #[test]
     pub fn try_get_unexisting_node() -> Result<(), String> {
         let graph = Graph::<&str>::new();
-        if graph.get_node(1).is_some(){
-            return Err(String::from("Successfully accessed an unexisting node!"))
+        if graph.get_node(1).is_some() {
+            return Err(String::from("Successfully Accessed an Unexisting Node!"))
         } else {
             Ok(())
         }

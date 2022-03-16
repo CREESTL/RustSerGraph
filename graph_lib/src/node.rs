@@ -28,7 +28,7 @@ impl<T> Node<T> {
     }
 
     // Getter for 'connected'
-    pub fn connected(&self) -> &Vec<usize>{
+    pub fn connected(&self) -> &Vec<usize> {
         &self.connected
     }
 

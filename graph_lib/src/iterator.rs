@@ -6,7 +6,7 @@ use super::graph::Graph;
 use std::fmt::Display;
 
 
-pub struct GraphIter{
+pub struct GraphIter {
     // Node arena indexes are stored on the stack
     stack: Vec<usize>,
     // Vector holds the indexes of nodes that have already been visited
@@ -14,7 +14,7 @@ pub struct GraphIter{
     visited: Vec<usize>,
 }
 
-impl GraphIter{
+impl GraphIter {
 
     // Constructor of the iterator 
     pub fn new(root: Option<usize>) -> Self {
@@ -76,7 +76,7 @@ impl GraphIter{
     pub fn next_depth_search<T: Display>(&mut self, graph: &Graph<T>) -> Option<usize> {
 
         // Get the next index from the stack
-        while let Some(node_index) = self.stack.pop(){
+        while let Some(node_index) = self.stack.pop() {
             // Only process nodes that have not been visited yet
             if self.visited.contains(&node_index) {
                 continue;
@@ -89,7 +89,7 @@ impl GraphIter{
                 let mut clone = node.connected().clone();
                 // Reverse the stack to process the rightmost edge first (human-readible)
                 clone.reverse();
-                for node in clone.iter(){
+                for node in clone.iter() {
                         self.stack.push(*node);
                 }
 

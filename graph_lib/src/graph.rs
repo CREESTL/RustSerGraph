@@ -16,7 +16,7 @@ pub struct Graph<T> {
     pub root: Option<usize>,
 }
 
-impl<T> Graph<T>{
+impl<T> Graph<T> {
     // Constructor of a graph
     // At first, graph has no root. It must be set with set_root()
     pub fn new() -> Self {
@@ -30,7 +30,7 @@ impl<T> Graph<T>{
         if !self.get_node(node.index).is_some() {
             self.arena.push(node);
         } else {
-            panic!("Node {} Is Already in The Graph", node.index);
+            panic!("Node {} is Already in The Graph", node.index);
         }
 
 
@@ -39,7 +39,7 @@ impl<T> Graph<T>{
     // Function removes a node with a given arena index
     pub fn remove_node(&mut self, index: usize) {
         if !self.in_graph(index) {
-            panic!("Node {} does not exist in the graph!", index);
+            panic!("Node {} does not Exist in the Graph!", index);
         }
         self.arena.retain(|x| x.index != index);
     }
@@ -69,13 +69,13 @@ impl<T> Graph<T>{
     pub fn set_root(&mut self, root: Option<usize>) {
         // Once root has been set to 'Some' it can't be set to 'None'
         if self.root.is_some() && root.is_none() {
-            panic!("Can't Set the Root to 'None' If It Has Already Been Set To 'Some'");
+            panic!("Can't Set the Root to 'None' if It Has Already Been Set to 'Some'");
         }
         // Check if a given root exists in graph
         if root.is_some() && self.in_graph(root.unwrap()) {
             self.root = root;
         } else {
-            panic!("Node {} is not in the Graph. Can't Set it to Root", root.unwrap());
+            panic!("Node {} is not in the Graph. Can't Set It to Root", root.unwrap());
         }
     }
 
@@ -94,7 +94,7 @@ impl<T> Graph<T>{
             // Start and end of the edge must be different nodes
             // That is the only forbidden case of a loop
             if to == from {
-                panic!("Can't Form an Edge from the Node to Itself!");
+                panic!("Can't Form an Edge From the Node to Itself!");
             } else {
 
                 // Check if edge does not exist yet
@@ -128,7 +128,7 @@ impl<T: Display + Debug> Graph<T> {
         let mut graph_iter = self.iterator();
         // Iterate over the graph and print it's nodes
         while let Some(i) = graph_iter.next_breadth_search(&self) {
-            if let Some(node) = self.get_node(i){
+            if let Some(node) = self.get_node(i) {
                 println!("{}", node);
             } else {
                 panic!("Could Not Find a Node!");

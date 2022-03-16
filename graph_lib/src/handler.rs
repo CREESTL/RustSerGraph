@@ -4,7 +4,7 @@ use super::graph::Graph;
 use super::node::Node;
 use std::fmt::Display;
 use std::fs::File;
-use std::io::{Write, BufReader, BufRead, Error};
+use std::io::{Write, BufReader, BufRead};
 
 pub struct GraphHandler;
 
@@ -17,7 +17,7 @@ impl GraphHandler {
 	}
 
 	// Function serializes the graph into Trivial Graph Format
-    pub fn serialize<T: Display>(&self, graph: &Graph<T>, path: &String) -> Result<(), Error> {
+    pub fn serialize<T: Display>(&self, graph: &Graph<T>, path: &String) -> Result<(), String> {
         
         let mut iter = graph.iterator();            
         let mut output = File::create(path).expect("Could Not Create a File to Write Into");
@@ -31,7 +31,7 @@ impl GraphHandler {
                 	writeln!(output, "{}", node.index).expect("Could Not Write a Node to File!");
             	}
             } else {
-                panic!("Could Not Find a Node!");
+                return Err(String::from("Could Not Find a Node!"));
             }
         }
         // Separator between strings of nodes and strings of edges
@@ -48,7 +48,7 @@ impl GraphHandler {
                     writeln!(output, "{} {}", node.index, another).expect("Could Not Write an Edge to File!");
                 }
             } else {
-                panic!("Could Not Find a Node!");
+                return Err(String::from("Could Not Find a Node!"));
             }
         }
 
@@ -56,7 +56,7 @@ impl GraphHandler {
     }
 
     // Function deserializes the graph from Trivial Graph Format
-    pub fn deserialize<T: Default>(&self, graph: &mut Graph<T>, path: &String) -> Result<(), Error> {
+    pub fn deserialize<T: Default>(&self, graph: &mut Graph<T>, path: &String) -> Result<(), String> {
 
         let input = File::open(path).expect("Could Not Open a File to Read From");
         let buf = BufReader::new(input);
@@ -64,7 +64,6 @@ impl GraphHandler {
         let mut edges = false;
         for line in buf.lines().map(|line| line.unwrap()) {
             let parts: Vec<&str> = line.split(" ").collect();
-            //println!("parts are {:?}", parts);
             if !edges {
                 if parts.get(0).unwrap() == &"#" {
                     edges = true;
