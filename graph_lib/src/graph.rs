@@ -22,13 +22,14 @@ impl<T> Graph<T> {
     }
 
     // Function adds a node to the graph
-    pub fn add_node(&mut self, node: Node<T>) {  
+    pub fn add_node(&mut self, node: Node<T>) -> Result<(), String>{  
 
         // Check if such node is not present in the graph
         if !self.get_node(node.index).is_some() {
             self.arena.push(node);
+            Ok(())
         } else {
-            panic!("Node {} is Already in The Graph", node.index);
+            Err(format!("Node {} is Already in The Graph", node.index))
         }
     }
 
@@ -42,7 +43,7 @@ impl<T> Graph<T> {
     }
 
     // Function removes a node with a given index
-    pub fn remove_node(&mut self, index: usize) -> Result<(), String>{
+    pub fn remove_node(&mut self, index: usize) -> Result<(), String> {
         if !self.in_graph(index) {
             return Err(format!("Node {} does not Exist in the Graph!", index))
         }
@@ -72,7 +73,7 @@ impl<T> Graph<T> {
 
 
     // Function makes a node with a given index a root of a graph
-    pub fn set_root(&mut self, root: Option<usize>) -> Result<(), String>{
+    pub fn set_root(&mut self, root: Option<usize>) -> Result<(), String> {
         // Once root has been set to 'Some' it can't be set to 'None'
         if self.root.is_some() && root.is_none() {
             return Err(String::from("Can't Set the Root to 'None' if It Has Already Been Set to 'Some'"))
@@ -88,39 +89,45 @@ impl<T> Graph<T> {
 
 
     // Function creates a directed edge of the graph between two nodes
-    pub fn add_edge(&mut self, from: usize, to: usize) {
+    pub fn add_edge(&mut self, from: usize, to: usize) -> Result<(), String> {
         // Check if both nodes are in the graph
         if self.in_graph(from) && self.in_graph(to) {
             // Start and end of the edge must be different nodes
             // That is the only forbidden case of a loop
             if to == from {
-                panic!("Can't Form an Edge From the Node to Itself!");
+                return Err(String::from("Can't Form an Edge From the Node to Itself!"))
             } else {
                 // Check if edge does not exist yet
                 // Multiple edges from one node to another are forbidden
                 if !self.get_node(from).unwrap().connected().contains(&to) {
                     self.get_node_mut(from).unwrap().connected_mut().push(to);
+                    Ok(())
                 } else {
-                    panic!("Multiple Edges From Node {} to Node {} are Forbidden!", to, from);
+                    return Err(format!("Multiple Edges From Node {} to Node {} are Forbidden!", to, from))
                 }
             }
         } else {
-            panic!("Both Nodes Must Be First Added To The Graph!");
+            return Err(String::from("Both Nodes Must Be First Added To The Graph!"))
         }
     }
 
     // Function deletes an edge between two nodes
-    pub fn remove_edge(&mut self, from: usize, to: usize) {
+    pub fn remove_edge(&mut self, from: usize, to: usize) -> Result<(), String> {
         // Check if both nodes are in the graph
         if self.in_graph(from) && self.in_graph(to) {
             if let Some(node) = self.get_node_mut(from) {
                 // Check if the edge exists
                 if node.connected().contains(&to) {
                     node.connected_mut().retain(|el| *el != to);
+                    return Ok(())
+                } else {
+                    return Err(String::from("The Edge Between Given Nodes Does Not Exist!"))
                 }
+            } else {
+                return Err(String::from("Could Not Find the First Given Node in the Graph"))
             }
         } else {
-            panic!("Both Nodes Must Be First Added To The Graph!");
+            Err(String::from("Both Nodes Must Be First Added To The Graph!"))
         }        
     }
 

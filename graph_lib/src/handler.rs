@@ -85,20 +85,17 @@ impl GraphHandler {
                 // Each node gets a default value of it;s type.
                 // Only types implementing 'Default' are allowed.
                 let node = Node::new(index, Default::default(), None);
-                graph.add_node(node);
+                graph.add_node(node)?;
                 // One of the nodes must be the root
                 if label == String::from("Root") {
                     // Set the root of a graph
-                    match graph.set_root(Some(index)){
-                        Err(_) => println!("Could not Set a Given Node as a Root!"),
-                        Ok(_) => ()
-                    };
+                    graph.set_root(Some(index))?;
                 }
             // Reading edges
             } else {
                 let from = parts.get(0).unwrap().parse().unwrap();
                 let to = parts.get(1).unwrap().parse().unwrap();
-                graph.add_edge(from, to);
+                graph.add_edge(from, to)?;
             }
         }
 
