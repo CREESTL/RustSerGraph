@@ -117,6 +117,20 @@ mod tests {
         graph.add_edge(666, 777);
     }
 
+
+    #[test]
+    pub fn delete_edge() {
+
+        let mut graph = Graph::new();
+
+        graph.add_node(Node::new(666,"Text", Some(vec![4])));
+        graph.add_node(Node::new(4,"Text", Some(vec![3])));
+        graph.add_node(Node::new(3,"Text", Some(vec![])));
+
+        graph.remove_edge(666, 4);
+        assert!(graph.get_node(666).unwrap().connected().is_empty());
+    }
+
     #[test]
     #[should_panic]
     pub fn try_add_forbidden_loop() {
@@ -144,7 +158,7 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn try_create_iterator_no_root() {
-        let iterator = GraphIter::new(None);
+        GraphIter::new(None);
     }
 
     #[test]
@@ -273,13 +287,13 @@ mod tests {
         handler.serialize(&mut graph, &path).expect("Graph Can Not be Serialized!");
 
         let mut fresh_graph: Graph<String> = Graph::new();
-        handler.deserialize(&mut fresh_graph, &path);
+        handler.deserialize(&mut fresh_graph, &path).unwrap();
 
         let mut iter1 = GraphIter::new(graph.root);
         let mut iter2 = GraphIter::new(fresh_graph.root);
 
         if graph.arena.len() == fresh_graph.arena.len() {
-            for i in 0..graph.arena.len() {
+            for _ in 0..graph.arena.len() {
                 let node1 = iter1.next_depth_search(&graph).unwrap();
                 let node2 = iter2.next_depth_search(&fresh_graph).unwrap();
                 assert!(node1 == node2);

@@ -35,13 +35,21 @@ fn main() {
 
 	// WARNING!
 
-	// In order for the deserialization to work correctly it is a must
+	// In order for the deserialization to work correctly it is a MUST
 	// to give a type annotation for the graph that will include the 
 	// deserialized nodes!
 	// Only types implementing 'Default' are available!
 	let mut fresh_graph: Graph<String> = Graph::new();
 	// Read graph nodes from the other file
 	handler.deserialize(&mut fresh_graph, &from_path).unwrap();
+	// Create and iterator to get to each node of the graph
+	let mut graph_iter = fresh_graph.iterator();
+	// Set nodes' values
+	while let Some(next_index) = graph_iter.next_breadth_search(&fresh_graph) {
+		if let Some(node) = fresh_graph.get_node_mut(next_index) {
+			node.change_value("Some New Value".to_string());
+		}
+	}
 	// Print the graph
 	fresh_graph.print();
 
