@@ -10,18 +10,21 @@ fn main() {
 	// Create a simple graph with 5 nodes
 	let mut graph = Graph::new();
 
-    graph.add_node(Node::new(666,"Text", Some(vec![4])));
-    graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
-    graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
-    graph.add_node(Node::new(2,"Text", Some(vec![8])));
-    graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
-    graph.add_node(Node::new(999,"Text", None));
-    graph.add_node(Node::new(777,"Text", None));
-    graph.add_node(Node::new(111,"Text", None));
-    graph.add_node(Node::new(222,"Text", None));
+    graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
+    graph.add_node(Node::new(4,"Text", Some(vec![3, 2]))).unwrap();
+    graph.add_node(Node::new(3,"Text", Some(vec![777, 999]))).unwrap();
+    graph.add_node(Node::new(2,"Text", Some(vec![8]))).unwrap();
+    graph.add_node(Node::new(8,"Text", Some(vec![111, 222]))).unwrap();
+    graph.add_node(Node::new(999,"Text", None)).unwrap();
+    graph.add_node(Node::new(777,"Text", None)).unwrap();
+    graph.add_node(Node::new(111,"Text", None)).unwrap();
+    graph.add_node(Node::new(222,"Text", None)).unwrap();
 
 	// Set the root of a graph
-	graph.set_root(Some(666));
+	match graph.set_root(Some(666)){
+		Err(_) => println!("Could not Set a Given Node as a Root!"),
+		Ok(_) => ()
+	};
 
 	// Paths for serializing/deserializing
 	// Two different files on purpose. The second contains lots of labels

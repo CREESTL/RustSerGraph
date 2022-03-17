@@ -53,8 +53,8 @@ mod tests {
     #[should_panic]
     pub fn try_add_node_twice() {
         let mut graph = Graph::<&str>::new();
-        graph.add_node(Node::new(666,"Text", None));
-        graph.add_node(Node::new(666,"Text", None));
+        graph.add_node(Node::new(666,"Text", None)).unwrap();
+        graph.add_node(Node::new(666,"Text", None)).unwrap();
     }
 
 
@@ -62,7 +62,7 @@ mod tests {
     #[should_panic]
     pub fn remove_unexisting_node() {
         let mut graph = Graph::<&str>::new();
-        graph.remove_node(333);
+        graph.remove_node(333).unwrap();
     }
 
 
@@ -89,11 +89,11 @@ mod tests {
     pub fn try_set_root_none() {
         let node = Node::new(666,"Text", None);
         let mut graph = Graph::<&str>::new();
-        graph.add_node(node);
+        graph.add_node(node).unwrap();
         // Also try to change the root
-        graph.set_root(Some(666));
-        graph.set_root(Some(777));
-        graph.set_root(None);
+        graph.set_root(Some(666)).unwrap();
+        graph.set_root(Some(777)).unwrap();
+        graph.set_root(None).unwrap();
 
     }
 
@@ -104,17 +104,17 @@ mod tests {
         let node1 = Node::new(666,"Text", None);
         let node2 = Node::new(777,"Daniel", None);
         let mut graph = Graph::<&str>::new();
-        graph.add_node(node1);
-        graph.add_node(node2);
-        graph.add_edge(666, 777);
-        graph.add_edge(666, 777);
+        graph.add_node(node1).unwrap();
+        graph.add_node(node2).unwrap();
+        graph.add_edge(666, 777).unwrap();
+        graph.add_edge(666, 777).unwrap();
     }
 
     #[test]
     #[should_panic]
     pub fn try_add_edge_unexisting_nodes() {
         let mut graph = Graph::<&str>::new();
-        graph.add_edge(666, 777);
+        graph.add_edge(666, 777).unwrap();
     }
 
 
@@ -123,11 +123,11 @@ mod tests {
 
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text", Some(vec![4])));
-        graph.add_node(Node::new(4,"Text", Some(vec![3])));
-        graph.add_node(Node::new(3,"Text", Some(vec![])));
+        graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
+        graph.add_node(Node::new(4,"Text", Some(vec![3]))).unwrap();
+        graph.add_node(Node::new(3,"Text", Some(vec![]))).unwrap();
 
-        graph.remove_edge(666, 4);
+        graph.remove_edge(666, 4).unwrap();
         assert!(graph.get_node(666).unwrap().connected().is_empty());
     }
 
@@ -136,8 +136,8 @@ mod tests {
     pub fn try_add_forbidden_loop() {
         let node1 = Node::new(666,"Text", None);
         let mut graph = Graph::<&str>::new();
-        graph.add_node(node1);
-        graph.add_edge(666, 666);
+        graph.add_node(node1).unwrap();
+        graph.add_edge(666, 666).unwrap();
     }
 
     #[derive(PartialEq, Debug)]
@@ -158,13 +158,13 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn try_create_iterator_no_root() {
-        GraphIter::new(None);
+        GraphIter::new(None).unwrap();
     }
 
     #[test]
     #[should_panic]
     pub fn try_reset_iterator_no_root() {
-        let mut iterator = GraphIter::new(Some(1));
+        let mut iterator = GraphIter::new(Some(1)).unwrap();
         iterator.reset(None);
     }
 
@@ -172,19 +172,19 @@ mod tests {
     pub fn check_bfs() -> Result<(), String>{
         let mut graph = Graph::new();
 
-    graph.add_node(Node::new(666,"Text", Some(vec![4])));
-    graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
-    graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
-    graph.add_node(Node::new(2,"Text", Some(vec![8])));
-    graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
-    graph.add_node(Node::new(999,"Text", None));
-    graph.add_node(Node::new(777,"Text", None));
-    graph.add_node(Node::new(111,"Text", None));
-    graph.add_node(Node::new(222,"Text", None));
+        graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
+        graph.add_node(Node::new(4,"Text", Some(vec![3, 2]))).unwrap();
+        graph.add_node(Node::new(3,"Text", Some(vec![777, 999]))).unwrap();
+        graph.add_node(Node::new(2,"Text", Some(vec![8]))).unwrap();
+        graph.add_node(Node::new(8,"Text", Some(vec![111, 222]))).unwrap();
+        graph.add_node(Node::new(999,"Text", None)).unwrap();
+        graph.add_node(Node::new(777,"Text", None)).unwrap();
+        graph.add_node(Node::new(111,"Text", None)).unwrap();
+        graph.add_node(Node::new(222,"Text", None)).unwrap();
 
         let correct_order = vec![666, 4, 3, 2, 777, 999, 8, 111, 222];
 
-        let mut iterator = GraphIter::new(Some(666));
+        let mut iterator = GraphIter::new(Some(666)).unwrap();
 
         let mut i = 0;
         let mut pass = true;
@@ -207,19 +207,19 @@ mod tests {
     pub fn check_dfs() -> Result<(), String>{
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text", Some(vec![4])));
-        graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
-        graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
-        graph.add_node(Node::new(2,"Text", Some(vec![8])));
-        graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
-        graph.add_node(Node::new(999,"Text", None));
-        graph.add_node(Node::new(777,"Text", None));
-        graph.add_node(Node::new(111,"Text", None));
-        graph.add_node(Node::new(222,"Text", None));
+        graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
+        graph.add_node(Node::new(4,"Text", Some(vec![3, 2]))).unwrap();
+        graph.add_node(Node::new(3,"Text", Some(vec![777, 999]))).unwrap();
+        graph.add_node(Node::new(2,"Text", Some(vec![8]))).unwrap();
+        graph.add_node(Node::new(8,"Text", Some(vec![111, 222]))).unwrap();
+        graph.add_node(Node::new(999,"Text", None)).unwrap();
+        graph.add_node(Node::new(777,"Text", None)).unwrap();
+        graph.add_node(Node::new(111,"Text", None)).unwrap();
+        graph.add_node(Node::new(222,"Text", None)).unwrap();
 
         let correct_order = vec![666, 4, 3, 777, 999, 2, 8, 111, 222];
 
-        let mut iterator = GraphIter::new(Some(666));
+        let mut iterator = GraphIter::new(Some(666)).unwrap();
 
         let mut i = 0;
         let mut pass = true;
@@ -240,16 +240,16 @@ mod tests {
     pub fn check_iterating_loops() -> Result<(), String>{
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text", None));
-        graph.add_node(Node::new(4,"Text", None));
-        graph.add_node(Node::new(3,"Text", None));
+        graph.add_node(Node::new(666,"Text", None)).unwrap();
+        graph.add_node(Node::new(4,"Text", None)).unwrap();
+        graph.add_node(Node::new(3,"Text", None)).unwrap();
 
 
-        graph.add_edge(666, 4);
-        graph.add_edge(4, 3);
-        graph.add_edge(3, 666);
+        graph.add_edge(666, 4).unwrap();
+        graph.add_edge(4, 3).unwrap();
+        graph.add_edge(3, 666).unwrap();
 
-        let mut iterator = GraphIter::new(Some(666));
+        let mut iterator = GraphIter::new(Some(666)).unwrap();
 
         let mut last = 0;
         while let Some(index) = iterator.next_breadth_search(&graph) {
@@ -269,17 +269,17 @@ mod tests {
     pub fn serialize_deserialize_same_graph() {
         let mut graph = Graph::new();
 
-        graph.add_node(Node::new(666,"Text", Some(vec![4])));
-        graph.add_node(Node::new(4,"Text", Some(vec![3, 2])));
-        graph.add_node(Node::new(3,"Text", Some(vec![777, 999])));
-        graph.add_node(Node::new(2,"Text", Some(vec![8])));
-        graph.add_node(Node::new(8,"Text", Some(vec![111, 222])));
-        graph.add_node(Node::new(999,"Text", None));
-        graph.add_node(Node::new(777,"Text", None));
-        graph.add_node(Node::new(111,"Text", None));
-        graph.add_node(Node::new(222,"Text", None));
+        graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
+        graph.add_node(Node::new(4,"Text", Some(vec![3, 2]))).unwrap();
+        graph.add_node(Node::new(3,"Text", Some(vec![777, 999]))).unwrap();
+        graph.add_node(Node::new(2,"Text", Some(vec![8]))).unwrap();
+        graph.add_node(Node::new(8,"Text", Some(vec![111, 222]))).unwrap();
+        graph.add_node(Node::new(999,"Text", None)).unwrap();
+        graph.add_node(Node::new(777,"Text", None)).unwrap();
+        graph.add_node(Node::new(111,"Text", None)).unwrap();
+        graph.add_node(Node::new(222,"Text", None)).unwrap();
 
-        graph.set_root(Some(666));
+        graph.set_root(Some(666)).unwrap();
 
         let path = "./test_resources/serialized_graph_file".to_string();
 
@@ -289,8 +289,8 @@ mod tests {
         let mut fresh_graph: Graph<String> = Graph::new();
         handler.deserialize(&mut fresh_graph, &path).unwrap();
 
-        let mut iter1 = GraphIter::new(graph.root);
-        let mut iter2 = GraphIter::new(fresh_graph.root);
+        let mut iter1 = GraphIter::new(graph.root).unwrap();
+        let mut iter2 = GraphIter::new(fresh_graph.root).unwrap();
 
         if graph.arena.len() == fresh_graph.arena.len() {
             for _ in 0..graph.arena.len() {

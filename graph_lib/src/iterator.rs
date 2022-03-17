@@ -14,16 +14,18 @@ pub struct GraphIter {
 impl GraphIter {
 
     // Constructor of the iterator 
-    pub fn new(root: Option<usize>) -> Self {
+    pub fn new(root: Option<usize>) -> Result<Self, String> {
         // If there is a root - stack starts with it
         if let Some(root) = root {
-            GraphIter {
-                stack: vec![root],
-                visited: vec![],
-            }
+            Ok(
+                GraphIter {
+                    stack: vec![root],
+                    visited: vec![],
+                }
+            )
         // If there is no root - stack is empty
         } else {
-            panic!("Please, Provide a Root Node for the Iterator!");
+            Err(String::from("Please, Provide a Root Node for the Iterator!"))
         }
     }
 
