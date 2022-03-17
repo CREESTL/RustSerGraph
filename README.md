@@ -18,9 +18,9 @@ To take a look at it's functionality just run the `main.rs` file that contains a
    __3__         (index of a node)  
    __4__         (index of a node)  
    __'#'__       (delimeter between section of nodes and edges)  
-   __1 2__       (numbers of nodes that have an edge between them)  
-   __1 3__       (numbers of nodes that have an edge between them)  
-   __3 4__       (numbers of nodes that have an edge between them)  
+   __1 2__       (indexes of nodes that have an edge between them)  
+   __1 3__       (indexes of nodes that have an edge between them)  
+   __3 4__       (indexes of nodes that have an edge between them)  
   
 - Deserialization is done with the same format. But there are some things to notice here as well.   
   There are many modifications of a TGF and some of them regard the labels (text after the index of a node) as a value of a node. But this library is    intended to provide functionality for the __generic__ graph. That is, the node 
