@@ -158,13 +158,13 @@ mod tests {
     #[test]
     #[should_panic]
     pub fn try_create_iterator_no_root() {
-        GraphIter::new(None);
+        GraphIter::new(None).unwrap();
     }
 
     #[test]
     #[should_panic]
     pub fn try_reset_iterator_no_root() {
-        let mut iterator = GraphIter::new(Some(1));
+        let mut iterator = GraphIter::new(Some(1)).unwrap();
         iterator.reset(None);
     }
 
@@ -172,19 +172,19 @@ mod tests {
     pub fn check_bfs() -> Result<(), String>{
         let mut graph = Graph::new();
 
-    graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
-    graph.add_node(Node::new(4,"Text", Some(vec![3, 2]))).unwrap();
-    graph.add_node(Node::new(3,"Text", Some(vec![777, 999]))).unwrap();
-    graph.add_node(Node::new(2,"Text", Some(vec![8]))).unwrap();
-    graph.add_node(Node::new(8,"Text", Some(vec![111, 222]))).unwrap();
-    graph.add_node(Node::new(999,"Text", None)).unwrap();
-    graph.add_node(Node::new(777,"Text", None)).unwrap();
-    graph.add_node(Node::new(111,"Text", None)).unwrap();
-    graph.add_node(Node::new(222,"Text", None)).unwrap();
+        graph.add_node(Node::new(666,"Text", Some(vec![4]))).unwrap();
+        graph.add_node(Node::new(4,"Text", Some(vec![3, 2]))).unwrap();
+        graph.add_node(Node::new(3,"Text", Some(vec![777, 999]))).unwrap();
+        graph.add_node(Node::new(2,"Text", Some(vec![8]))).unwrap();
+        graph.add_node(Node::new(8,"Text", Some(vec![111, 222]))).unwrap();
+        graph.add_node(Node::new(999,"Text", None)).unwrap();
+        graph.add_node(Node::new(777,"Text", None)).unwrap();
+        graph.add_node(Node::new(111,"Text", None)).unwrap();
+        graph.add_node(Node::new(222,"Text", None)).unwrap();
 
         let correct_order = vec![666, 4, 3, 2, 777, 999, 8, 111, 222];
 
-        let mut iterator = GraphIter::new(Some(666));
+        let mut iterator = GraphIter::new(Some(666)).unwrap();
 
         let mut i = 0;
         let mut pass = true;
@@ -219,7 +219,7 @@ mod tests {
 
         let correct_order = vec![666, 4, 3, 777, 999, 2, 8, 111, 222];
 
-        let mut iterator = GraphIter::new(Some(666));
+        let mut iterator = GraphIter::new(Some(666)).unwrap();
 
         let mut i = 0;
         let mut pass = true;
@@ -249,7 +249,7 @@ mod tests {
         graph.add_edge(4, 3).unwrap();
         graph.add_edge(3, 666).unwrap();
 
-        let mut iterator = GraphIter::new(Some(666));
+        let mut iterator = GraphIter::new(Some(666)).unwrap();
 
         let mut last = 0;
         while let Some(index) = iterator.next_breadth_search(&graph) {
@@ -289,8 +289,8 @@ mod tests {
         let mut fresh_graph: Graph<String> = Graph::new();
         handler.deserialize(&mut fresh_graph, &path).unwrap();
 
-        let mut iter1 = GraphIter::new(graph.root);
-        let mut iter2 = GraphIter::new(fresh_graph.root);
+        let mut iter1 = GraphIter::new(graph.root).unwrap();
+        let mut iter2 = GraphIter::new(fresh_graph.root).unwrap();
 
         if graph.arena.len() == fresh_graph.arena.len() {
             for _ in 0..graph.arena.len() {

@@ -133,7 +133,7 @@ impl<T> Graph<T> {
 
     // Function returns a custom iterator over the graph
     pub fn iterator(&self) -> GraphIter {
-        GraphIter::new(self.root)
+        GraphIter::new(self.root).unwrap()
     }
 
 }
