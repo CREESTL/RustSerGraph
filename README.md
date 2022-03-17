@@ -24,13 +24,13 @@ To take a look at it's functionality just run the `main.rs` file that contains a
   
 - Deserialization is done with the same format. But there are some things to notice here as well.   
   There are many modifications of a TGF and some of them regard the labels (text after the index of a node) as a value of a node. But this library is    intended to provide functionality for the __generic__ graph. That is, the node 
-    can have value of any type (that __implements the `Default` trait__). But I haven't yet found a universal way to serialize any provided type into TGF string.  
+    can have value of any type (that __implements the `Default` trait__). But I haven't yet found a universal way to serialize any provided type into TGF string the way that after parsing a string representation of a node value from the file the compiler would know _what specific type a value should have_.    
     That means:   
    - __Only nodes' indexes and edges are written into the file and read from the file__.   
    - The __only label__ that has any effect is a `Root` label that indicates which 
       node is the root of the graph. __Any other__ labels are ignored.   
 ### Work Process
-   - Create an empty graph with `Graph::new()`
+   - Create an empty graph with `Graph::new()`. Please, make sure to specify _graph's type_ in order for the program to work  
    - Add nodes with given values and/or connected nodes   
      __OR__   
      Deserialize nodes from the TGF file with `Handler::deserialize()`. Nodes will be added to the graph and edges between them will be created. But in this case you have to set __each node's value__ after deserialization.
