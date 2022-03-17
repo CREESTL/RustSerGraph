@@ -89,7 +89,7 @@ mod tests {
     pub fn try_set_root_none() {
         let node = Node::new(666,"Text", None);
         let mut graph = Graph::<&str>::new();
-        graph.add_node(node);
+        graph.add_node(node).unwrap();
         // Also try to change the root
         graph.set_root(Some(666)).unwrap();
         graph.set_root(Some(777)).unwrap();
@@ -104,8 +104,8 @@ mod tests {
         let node1 = Node::new(666,"Text", None);
         let node2 = Node::new(777,"Daniel", None);
         let mut graph = Graph::<&str>::new();
-        graph.add_node(node1);
-        graph.add_node(node2);
+        graph.add_node(node1).unwrap();
+        graph.add_node(node2).unwrap();
         graph.add_edge(666, 777).unwrap();
         graph.add_edge(666, 777).unwrap();
     }
