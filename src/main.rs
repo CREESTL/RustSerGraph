@@ -21,7 +21,10 @@ fn main() {
     graph.add_node(Node::new(222,"Text", None));
 
 	// Set the root of a graph
-	graph.set_root(Some(666));
+	match graph.set_root(Some(666)){
+		Err(_) => println!("Could not Set a Given Node as a Root!"),
+		Ok(_) => ()
+	};
 
 	// Paths for serializing/deserializing
 	// Two different files on purpose. The second contains lots of labels

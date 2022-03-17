@@ -57,7 +57,7 @@ mod tests {
         graph.add_node(Node::new(666,"Text", None));
     }
 
-
+    
     #[test]
     #[should_panic]
     pub fn remove_unexisting_node() {

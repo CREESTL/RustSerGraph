@@ -42,11 +42,12 @@ impl<T> Graph<T> {
     }
 
     // Function removes a node with a given index
-    pub fn remove_node(&mut self, index: usize) {
+    pub fn remove_node(&mut self, index: usize) -> Result<(), String>{
         if !self.in_graph(index) {
-            panic!("Node {} does not Exist in the Graph!", index);
+            return Err(format!("Node {} does not Exist in the Graph!", index))
         }
         self.arena.retain(|x| x.index != index);
+        Ok(())
     }
 
     // Function gets the node from the graph (borrows it)
@@ -71,16 +72,17 @@ impl<T> Graph<T> {
 
 
     // Function makes a node with a given index a root of a graph
-    pub fn set_root(&mut self, root: Option<usize>) {
+    pub fn set_root(&mut self, root: Option<usize>) -> Result<(), String>{
         // Once root has been set to 'Some' it can't be set to 'None'
         if self.root.is_some() && root.is_none() {
-            panic!("Can't Set the Root to 'None' if It Has Already Been Set to 'Some'");
+            return Err(String::from("Can't Set the Root to 'None' if It Has Already Been Set to 'Some'"))
         }
         // Check if a given root exists in graph
         if root.is_some() && self.in_graph(root.unwrap()) {
             self.root = root;
+            Ok(())
         } else {
-            panic!("Node {} is not in the Graph. Can't Set It to Root", root.unwrap());
+            return Err(format!("Node {} is not in the Graph. Can't Set It to Root", root.unwrap()))
         }
     }
 

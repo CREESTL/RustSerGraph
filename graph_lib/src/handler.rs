@@ -88,7 +88,11 @@ impl GraphHandler {
                 graph.add_node(node);
                 // One of the nodes must be the root
                 if label == String::from("Root") {
-                	graph.set_root(Some(index));
+                    // Set the root of a graph
+                    match graph.set_root(Some(index)){
+                        Err(_) => println!("Could not Set a Given Node as a Root!"),
+                        Ok(_) => ()
+                    };
                 }
             // Reading edges
             } else {
