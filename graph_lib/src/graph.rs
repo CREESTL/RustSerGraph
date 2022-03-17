@@ -107,6 +107,21 @@ impl<T> Graph<T> {
         }
     }
 
+    // Function deletes an edge between two nodes
+    pub fn remove_edge(&mut self, from: usize, to: usize) {
+        // Check if both nodes are in the graph
+        if self.in_graph(from) && self.in_graph(to) {
+            if let Some(node) = self.get_node_mut(from) {
+                // Check if the edge exists
+                if node.connected().contains(&to) {
+                    node.connected_mut().retain(|el| *el != to);
+                }
+            }
+        } else {
+            panic!("Both Nodes Must Be First Added To The Graph!");
+        }        
+    }
+
     // Function returns a custom iterator over the graph
     pub fn iterator(&self) -> GraphIter {
         GraphIter::new(self.root)

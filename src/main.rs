@@ -35,7 +35,7 @@ fn main() {
 
 	// WARNING!
 
-	// In order for the deserialization to work correctly it is a must
+	// In order for the deserialization to work correctly it is a MUST
 	// to give a type annotation for the graph that will include the 
 	// deserialized nodes!
 	// Only types implementing 'Default' are available!
